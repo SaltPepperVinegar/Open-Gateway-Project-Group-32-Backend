@@ -5,9 +5,7 @@ import requests
 import json
 
 def number_verification(number = "+61412345678"):
-    auth_code = get_auth_code(NUMBER_VERFICATION_SCOPE)
-    print(auth_code)
-    access_token = get_token(auth_code, NUMBER_VERFICATION_SCOPE)
+    access_token = get_token(NUMBER_VERFICATION_SCOPE)
     print("access_token:", access_token)
 
 

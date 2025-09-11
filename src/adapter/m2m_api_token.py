@@ -2,13 +2,15 @@ import os, re, base64, hashlib, urllib.parse, warnings, requests
 from urllib3.exceptions import InsecureRequestWarning
 from .config import *
 
-def get_token(auth_code, scope = None):
+def get_token(scope = None):
+    warnings.filterwarnings("ignore", category=InsecureRequestWarning)
+
     data = {
         "grant_type": "client_credentials",
         "client_id": CLIENT_ID,
         "client_secret": "Yqp2jao1Ruc8UBwk7jwAIJ6Y1jsVT4qJHvQVpduK",  # add if client is confidential
     }
-    
+
     if (scope != None):
         data["scope"] = scope
 

@@ -5,9 +5,7 @@ import requests
 
 
 def population_density_data(payload = None):
-    auth_code = get_auth_code(POPULATION_DENSITY_DATA_SCOPE)
-    print(auth_code)
-    access_token = get_token(auth_code, POPULATION_DENSITY_DATA_SCOPE)
+    access_token = get_token(POPULATION_DENSITY_DATA_SCOPE)
     print("access_token:", access_token)
 
 
