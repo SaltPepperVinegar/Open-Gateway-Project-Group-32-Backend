@@ -5,9 +5,7 @@ import requests
 
 
 def region_device_count(payload = None):
-    auth_code = get_auth_code(REGION_DEVICE_COUNT_SCOPE)
-    print(auth_code)
-    access_token = get_token(auth_code, REGION_DEVICE_COUNT_SCOPE)
+    access_token = get_token(REGION_DEVICE_COUNT_SCOPE)
     print("access_token:", access_token)
 
 

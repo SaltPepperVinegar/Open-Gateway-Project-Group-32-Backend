@@ -1,8 +1,13 @@
 import os, re, base64, hashlib, urllib.parse, warnings, requests
 from urllib3.exceptions import InsecureRequestWarning
 from .config import *
+from .auth_code import get_auth_code
 
-def get_token(auth_code, scope = None):
+def get_token(scope = None):
+    auth_code = get_auth_code(NUMBER_VERFICATION_SCOPE)
+    
+    print(auth_code)
+
     data = {
         "grant_type": "authorization_code",
         "code": auth_code,
