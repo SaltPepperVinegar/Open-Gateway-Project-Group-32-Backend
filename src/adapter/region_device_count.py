@@ -1,4 +1,4 @@
-from .api_token import get_token
+from .m2m_api_token import get_token
 from .auth_code import get_auth_code
 from .config import *
 import requests
