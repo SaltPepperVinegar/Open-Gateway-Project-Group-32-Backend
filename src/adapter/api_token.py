@@ -4,16 +4,16 @@ from .config import *
 from .auth_code import get_auth_code
 
 def get_token(scope = None):
-    auth_code = get_auth_code(NUMBER_VERFICATION_SCOPE)
+    auth_code = get_auth_code(scope)
     
     print(auth_code)
 
     data = {
         "grant_type": "authorization_code",
         "code": auth_code,
-        "redirect_uri": REDIRECT_URI,   # must EXACTLY match what you used at /auth
+        "redirect_uri": REDIRECT_URI,
         "client_id": CLIENT_ID,
-        "client_secret": "Yqp2jao1Ruc8UBwk7jwAIJ6Y1jsVT4qJHvQVpduK",  # add if client is confidential
+        "client_secret": CLIENT_SECRET,
     }
     
     if (scope != None):
@@ -21,7 +21,7 @@ def get_token(scope = None):
 
     # Only disable verification for this stub host (dev only)
     resp = requests.post(TOKEN_URL, data=data, verify=False)
-    print(resp.status_code, resp.text)
+    #print(resp.status_code, resp.text)
     resp.raise_for_status()
     tokens = resp.json()
-    return tokens["access_token"]
+    return tokens

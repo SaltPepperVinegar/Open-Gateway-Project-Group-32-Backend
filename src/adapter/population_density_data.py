@@ -1,13 +1,23 @@
-from .m2m_api_token import get_token
-from .auth_code import get_auth_code
+from .api_token import get_token
 from .config import *
 import requests
+import time     
 
+access_token = None
+expire_time = None
 
 def population_density_data(payload = None):
-    access_token = get_token(POPULATION_DENSITY_DATA_SCOPE)
-    print("access_token:", access_token)
+    global access_token, expire_time
 
+    if expire_time == None or expire_time < time.time():
+        tokens = get_token(POPULATION_DENSITY_DATA_SCOPE)
+        access_token = tokens["access_token"]
+        expire_time = time.time() + tokens["expires_in"]
+
+        print("access_token:", access_token[0:32])
+        print("expire_time", expire_time)
+    else: 
+        print(f"token still valid for {expire_time - time.time()}")
 
     headers = {
         "Authorization": f"Bearer {access_token}",
@@ -34,6 +44,4 @@ def population_density_data(payload = None):
     print(resp.status_code, resp.text)
     resp.raise_for_status()
     data = resp.json()
-    print(data)
-
     return data
