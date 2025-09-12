@@ -1,13 +1,23 @@
 from .m2m_api_token import get_token
-from .auth_code import get_auth_code
 from .config import *
 import requests
+import time     
 
+access_token = None
+expire_time = None
 
 def region_device_count(payload = None):
-    access_token = get_token(REGION_DEVICE_COUNT_SCOPE)
-    print("access_token:", access_token)
+    global access_token, expire_time
 
+    if expire_time == None or expire_time < time.time():
+        tokens = get_token(REGION_DEVICE_COUNT_SCOPE)
+        access_token = tokens["access_token"]
+        expire_time = time.time() + tokens["expires_in"]
+
+        print("access_token:", access_token[0:32])
+        print("expire_time", expire_time)
+    else: 
+        print(f"token still valid for {expire_time - time.time()}")
 
     headers = {
         "Authorization": f"Bearer {access_token}",
@@ -29,6 +39,4 @@ def region_device_count(payload = None):
     print(resp.status_code, resp.text)
     resp.raise_for_status()
     data = resp.json()
-    print(data)
-
     return data
