@@ -1,4 +1,3 @@
-# requirements.in
 fastapi[standard]
 uvicorn[standard]
 beanie

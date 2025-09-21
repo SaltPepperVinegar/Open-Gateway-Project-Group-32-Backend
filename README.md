@@ -15,6 +15,7 @@ source .venv/bin/activate
 
 python -m pip install --upgrade pip setuptools wheel
 pip install -r requirements.txt
+pip install -r requirements-dev.txt
 
 
 #run the server
