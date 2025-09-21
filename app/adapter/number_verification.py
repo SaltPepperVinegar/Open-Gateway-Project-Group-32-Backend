@@ -1,5 +1,5 @@
 from .m2m_api_token import get_token
-from .config import *
+from .config import NUMBER_VERFICATION_SCOPE, NUMBER_VERFICATION_URL
 import requests
 import time
 

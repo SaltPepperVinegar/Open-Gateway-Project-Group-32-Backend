@@ -1,5 +1,5 @@
 from .m2m_api_token import get_token
-from .config import *
+from .config import REGION_DEVICE_COUNT_SCOPE, REGION_DEVICE_COUNT_URL
 import requests
 import time
 

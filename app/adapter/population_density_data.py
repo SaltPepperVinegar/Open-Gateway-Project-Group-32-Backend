@@ -1,5 +1,5 @@
 from .api_token import get_token
-from .config import *
+from .config import POPULATION_DENSITY_DATA_SCOPE, POPULATION_DENSITY_DATA_URL
 import requests
 import time
 

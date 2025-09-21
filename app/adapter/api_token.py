@@ -1,6 +1,6 @@
 import os, re, base64, hashlib, urllib.parse, warnings, requests
 from urllib3.exceptions import InsecureRequestWarning
-from .config import *
+from .config import CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, TOKEN_URL
 from .auth_code import get_auth_code
 
 
