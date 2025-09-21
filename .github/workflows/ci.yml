@@ -33,7 +33,7 @@ jobs:
       - name: Check requirements are up to date
         run: |
           # Recompile and fail if requirements.txt would change
-          pip-compile requirements.in -o requirements.txt
+          pip-compile --output-file=requirements.txt requirements.in
           if [ -f requirements-dev.in ]; then
             pip-compile requirements-dev.in -o requirements-dev.txt
           fi
