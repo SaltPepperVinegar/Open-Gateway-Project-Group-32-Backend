@@ -12,3 +12,24 @@ unfixable = []
 "alembic/*.py" = ["E402"]
 "tests/**/*.py" = ["S101"]
 
+[tool.mypy]
+python_version = "3.12"
+strict_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true
+no_implicit_optional = true
+
+# Helps mypy understand Pydantic BaseModel fields
+plugins = ["pydantic.mypy"]
+
+# If you want to silence missing stubs for some third-party libs:
+[[tool.mypy.overrides]]
+module = [
+  "urllib3.*",
+  "bs4.*",
+  "motor.*",
+  "beanie.*",
+  "fastapi.*",
+]
+ignore_missing_imports = true
