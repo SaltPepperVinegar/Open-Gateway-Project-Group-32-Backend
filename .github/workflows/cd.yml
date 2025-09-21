@@ -4,7 +4,9 @@ on:
   push:
     branches: [ main ]
     tags: ["v*.*.*"]
+  pull_request:
 
+  
 env:
   IMAGE_NAME: open-gateway-project-backend
   REGISTRY: ghcr.io
@@ -43,18 +45,55 @@ jobs:
           else
             echo "version_tag=" >> "$GITHUB_OUTPUT"
           fi
+          
+      # Compute lowercase + tags
+      - name: Compute image vars
+        id: vars
+        shell: bash
+        run: |
+          # Use env or defaults, but force lowercase for registry/namespace/image
+          REGISTRY="${REGISTRY:-ghcr.io}"
+          NAMESPACE="${GHCR_NAMESPACE:-${GITHUB_REPOSITORY_OWNER}}"
+          IMAGE="${IMAGE_NAME:-open-gateway-project-backend}"
 
-      - name: Build & push
+          echo "registry=$(echo "$REGISTRY" | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
+          echo "namespace=$(echo "$NAMESPACE" | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
+          echo "image=$(echo "$IMAGE" | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
+
+          # short SHA tag
+          echo "sha_tag=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+
+          # optional version tag only on tag refs
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            echo "version_tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+          else
+            echo "version_tag=" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Build & push (sha + latest)
+      - name: Build & push (sha + latest)
         uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile
           push: true
-          # add more platforms if you need: linux/arm64
           platforms: linux/amd64
           tags: |
-            ${{ env.REGISTRY }}/${{ env.GHCR_NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.sha_tag }}
-            ${{ env.REGISTRY }}/${{ env.GHCR_NAMESPACE }}/${{ env.IMAGE_NAME }}:latest
-            ${{ steps.vars.outputs.version_tag && format('{0}/{1}/{2}:{3}', env.REGISTRY, env.GHCR_NAMESPACE, env.IMAGE_NAME, steps.vars.outputs.version_tag) || '' }}
+            ${{ steps.vars.outputs.registry }}/${{ steps.vars.outputs.namespace }}/${{ steps.vars.outputs.image }}:${{ steps.vars.outputs.sha_tag }}
+            ${{ steps.vars.outputs.registry }}/${{ steps.vars.outputs.namespace }}/${{ steps.vars.outputs.image }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # Build & push (version tag) — only when a git tag triggered the workflow
+      - name: Build & push (version tag)
+        if: ${{ steps.vars.outputs.version_tag != '' }}
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          platforms: linux/amd64
+          tags: |
+            ${{ steps.vars.outputs.registry }}/${{ steps.vars.outputs.namespace }}/${{ steps.vars.outputs.image }}:${{ steps.vars.outputs.version_tag }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
