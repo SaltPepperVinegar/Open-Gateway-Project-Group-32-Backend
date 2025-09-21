@@ -1,7 +1,9 @@
-from .m2m_api_token import get_token
-from .config import NUMBER_VERFICATION_SCOPE, NUMBER_VERFICATION_URL
-import requests
 import time
+
+import requests
+
+from .config import NUMBER_VERFICATION_SCOPE, NUMBER_VERFICATION_URL
+from .m2m_api_token import get_token
 
 access_token = None
 expire_time = None
@@ -10,7 +12,7 @@ expire_time = None
 def number_verification(payload=None):
     global access_token, expire_time
 
-    if expire_time == None or expire_time < time.time():
+    if expire_time is None or expire_time < time.time():
         tokens = get_token(NUMBER_VERFICATION_SCOPE)
         access_token = tokens["access_token"]
         expire_time = time.time() + tokens["expires_in"]
@@ -25,7 +27,7 @@ def number_verification(payload=None):
         "Content-Type": "application/json",
     }
 
-    if payload == None:
+    if payload is None:
         payload = {
             "phoneNumber": "+61412345678",
         }

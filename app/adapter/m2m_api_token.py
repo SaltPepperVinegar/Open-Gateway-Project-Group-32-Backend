@@ -1,5 +1,8 @@
-import os, re, base64, hashlib, urllib.parse, warnings, requests
+import warnings
+
+import requests
 from urllib3.exceptions import InsecureRequestWarning
+
 from .config import CLIENT_ID, CLIENT_SECRET, TOKEN_URL
 
 
@@ -13,7 +16,7 @@ def get_token(scope=None):
         "client_secret": CLIENT_SECRET,
     }
 
-    if scope != None:
+    if scope is not None:
         data["scope"] = scope
 
     # Only disable verification for this stub host (dev only)

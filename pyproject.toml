@@ -1,13 +1,14 @@
-[tool.black]
-line-length = 100
-target-version = ["py311"]
-
 [tool.ruff]
+target-version = "py313"
 line-length = 100
-select = ["E","F","I","UP","B"]
-exclude = ["venv",".venv"]
 
-[tool.mypy]
-python_version = "3.11"
-strict = true
-ignore_missing_imports = true
+[tool.ruff.lint]
+select = ["E", "F", "I", "B"]  # was: select = [...]
+ignore = []                    # was: ignore = [...]
+fixable = ["ALL"]              # was: fixable = [...]
+unfixable = []
+
+[tool.ruff.lint.per-file-ignores]
+"alembic/*.py" = ["E402"]
+"tests/**/*.py" = ["S101"]
+

@@ -1,7 +1,9 @@
+import time
+
+import requests
+
 from .api_token import get_token
 from .config import POPULATION_DENSITY_DATA_SCOPE, POPULATION_DENSITY_DATA_URL
-import requests
-import time
 
 access_token = None
 expire_time = None
@@ -10,7 +12,7 @@ expire_time = None
 def population_density_data(payload=None):
     global access_token, expire_time
 
-    if expire_time == None or expire_time < time.time():
+    if expire_time is None or expire_time < time.time():
         tokens = get_token(POPULATION_DENSITY_DATA_SCOPE)
         access_token = tokens["access_token"]
         expire_time = time.time() + tokens["expires_in"]
@@ -25,7 +27,7 @@ def population_density_data(payload=None):
         "Content-Type": "application/json",
     }
 
-    if payload == None:
+    if payload is None:
         payload = {
             "area": {
                 "areaType": "POLYGON",

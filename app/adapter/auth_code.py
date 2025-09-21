@@ -1,7 +1,11 @@
-import os, re, base64, hashlib, urllib.parse, warnings, requests
-from urllib3.exceptions import InsecureRequestWarning
+import urllib.parse
+import warnings
+
+import requests
 from bs4 import BeautifulSoup
-from .config import CLIENT_ID, REDIRECT_URI, REALM_BASE, USERNAME, PASSWORD
+from urllib3.exceptions import InsecureRequestWarning
+
+from .config import CLIENT_ID, PASSWORD, REALM_BASE, REDIRECT_URI, USERNAME
 
 
 def get_auth_code(scope: str) -> str:

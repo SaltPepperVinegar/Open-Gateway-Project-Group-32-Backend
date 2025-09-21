@@ -1,7 +1,9 @@
-from .m2m_api_token import get_token
-from .config import REGION_DEVICE_COUNT_SCOPE, REGION_DEVICE_COUNT_URL
-import requests
 import time
+
+import requests
+
+from .config import REGION_DEVICE_COUNT_SCOPE, REGION_DEVICE_COUNT_URL
+from .m2m_api_token import get_token
 
 access_token = None
 expire_time = None
@@ -10,7 +12,7 @@ expire_time = None
 def region_device_count(payload=None):
     global access_token, expire_time
 
-    if expire_time == None or expire_time < time.time():
+    if expire_time is None or expire_time < time.time():
         tokens = get_token(REGION_DEVICE_COUNT_SCOPE)
         access_token = tokens["access_token"]
         expire_time = time.time() + tokens["expires_in"]
@@ -25,7 +27,7 @@ def region_device_count(payload=None):
         "Content-Type": "application/json",
     }
 
-    if payload == None:
+    if payload is    None:
         payload = {
             "area": {
                 "areaType": "CIRCLE",
