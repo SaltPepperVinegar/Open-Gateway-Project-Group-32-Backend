@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    services:
+      mongo:
+        image: mongo:7
+        ports: ["27017:27017"]
+        options: >-
+          --health-cmd="mongodb-status || exit 1"
+          --health-interval=10s --health-timeout=5s --health-retries=5
+
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install pip-tools & baseline
+        run: |
+          python -m pip install -U pip setuptools wheel pip-tools
+
+      - name: Check requirements are up to date
+        run: |
+          # Recompile and fail if requirements.txt would change
+          pip-compile requirements.in -o requirements.txt
+          if [ -f requirements-dev.in ]; then
+            pip-compile requirements-dev.in -o requirements-dev.txt
+          fi
+          if ! git diff --exit-code -- requirements*.txt; then
+            echo "::error::requirements*.txt are out of date. Run pip-compile locally and commit."
+            exit 1
+          fi
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install deps (dev)
+        run: |
+          if [ -f requirements-dev.txt ]; then
+            pip install -r requirements-dev.txt
+          else
+            pip install -r requirements.txt
+          fi
+
+      - name: Lint (ruff) & Format check (black)
+        run: |
+          ruff check .
+          black --check .
+
+      - name: Type-check (mypy)
+        run: mypy app
+
+      - name: Run tests
+        env:
+          # example: point to test Mongo if you spin one up; otherwise your code should mock
+          MONGO_DSN: "mongodb://localhost:27017/test_db"
+        run: |
+          pytest -q --maxfail=1
