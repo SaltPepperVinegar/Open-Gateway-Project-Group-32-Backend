@@ -3,9 +3,10 @@ from urllib3.exceptions import InsecureRequestWarning
 from .config import *
 from .auth_code import get_auth_code
 
-def get_token(scope = None):
+
+def get_token(scope=None):
     auth_code = get_auth_code(scope)
-    
+
     print(auth_code)
 
     data = {
@@ -15,13 +16,13 @@ def get_token(scope = None):
         "client_id": CLIENT_ID,
         "client_secret": CLIENT_SECRET,
     }
-    
-    if (scope != None):
+
+    if scope != None:
         data["scope"] = scope
 
     # Only disable verification for this stub host (dev only)
     resp = requests.post(TOKEN_URL, data=data, verify=False)
-    #print(resp.status_code, resp.text)
+    # print(resp.status_code, resp.text)
     resp.raise_for_status()
     tokens = resp.json()
     return tokens

@@ -1,6 +1,7 @@
 from pydantic import BaseModel, EmailStr
 from typing import Any
 
+
 class UserRes(BaseModel):
     id: str
     username: str

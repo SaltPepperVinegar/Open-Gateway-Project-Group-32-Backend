@@ -10,13 +10,16 @@ from app.api.v1.users import router as users_router
 
 app = FastAPI(title=settings.APP_NAME)
 
+
 @app.on_event("startup")
 async def on_startup():
     client = AsyncIOMotorClient(settings.MONGO_DSN)
     db = client.get_default_database()
     await init_beanie(database=db, document_models=[UserDoc])
 
+
 app.include_router(users_router)
+
 
 @app.get("/healthz")
 async def healthz():
@@ -26,6 +29,7 @@ async def healthz():
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # startup
@@ -34,6 +38,7 @@ async def lifespan(app: FastAPI):
     yield
     # shutdown
     app.state.mongo_client.close()
+
 
 app = FastAPI(lifespan=lifespan)
 

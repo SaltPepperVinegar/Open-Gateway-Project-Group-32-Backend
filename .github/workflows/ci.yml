@@ -13,10 +13,9 @@ jobs:
     services:
       mongo:
         image: mongo:7
-        ports: ["27017:27017"]
         options: >-
-          --health-cmd="mongodb-status || exit 1"
-          --health-interval=10s --health-timeout=5s --health-retries=5
+          --health-cmd="mongosh --quiet --eval 'db.adminCommand({ ping: 1 }).ok' || exit 1"
+          --health-interval=5s --health-timeout=5s --health-retries=30
 
 
     steps:
@@ -69,6 +68,7 @@ jobs:
 
       - name: Run tests
         env:
+          USE_DB: "1"
           # example: point to test Mongo if you spin one up; otherwise your code should mock
           MONGO_DSN: "mongodb://localhost:27017/test_db"
         run: |

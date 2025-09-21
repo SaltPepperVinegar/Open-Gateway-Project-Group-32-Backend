@@ -1,6 +1,7 @@
 from app.repository.users_repo import create_user, get_user_by_username
 from app.models.api.user_res import UserRes
 
+
 async def register_user(username: str, email: str) -> UserRes:
     existing = await get_user_by_username(username)
     if existing:

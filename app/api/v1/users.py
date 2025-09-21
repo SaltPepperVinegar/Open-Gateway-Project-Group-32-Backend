@@ -5,6 +5,7 @@ from app.service.users_service import register_user
 
 router = APIRouter(prefix="/users", tags=["users"])
 
+
 @router.post("", response_model=UserRes, status_code=201)
 async def create_user(req: CreateUserReq):
     try:

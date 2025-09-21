@@ -1,11 +1,10 @@
 import os, re, base64, hashlib, urllib.parse, warnings, requests
 from urllib3.exceptions import InsecureRequestWarning
-from bs4 import BeautifulSoup 
+from bs4 import BeautifulSoup
 from .config import *
 
 
-
-def get_auth_code(scope : str) -> str:
+def get_auth_code(scope: str) -> str:
     session = requests.Session()
 
     # --- safety: only suppress TLS warnings for stub host we explicitly bypass ---
@@ -33,11 +32,13 @@ def get_auth_code(scope : str) -> str:
     inputs = {i.get("name"): i.get("value", "") for i in form.find_all("input") if i.get("name")}
 
     # Fill username/password (Keycloak uses 'username' + 'password' normally)
-    inputs["username"] = USERNAME if "username" in inputs or "login" not in inputs else inputs["login"]
+    inputs["username"] = (
+        USERNAME if "username" in inputs or "login" not in inputs else inputs["login"]
+    )
     inputs["password"] = PASSWORD
 
     # 2) Submit credentials BUT do NOT follow redirects (prevents hitting localhost)
-    resp = session.post(action, data=inputs, allow_redirects=False, verify= False)
+    resp = session.post(action, data=inputs, allow_redirects=False, verify=False)
     print(resp.headers)
 
     loc = urllib.parse.urljoin(resp.request.url, resp.headers["Location"])
@@ -45,12 +46,7 @@ def get_auth_code(scope : str) -> str:
         q = urllib.parse.urlparse(loc).query
         auth_code = urllib.parse.parse_qs(q).get("code", [None])[0]
 
-
-
     if not auth_code:
         raise RuntimeError("Could not capture authorization code before redirecting to localhost.")
     session.close()
     return auth_code
-
-
-
