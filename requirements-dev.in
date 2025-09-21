@@ -11,7 +11,7 @@ types-beautifulsoup4
 
 # runtime libs mypy needs to import
 fastapi
-pydantic
+pydantic[email]
 pydantic-settings
 beanie
 motor
