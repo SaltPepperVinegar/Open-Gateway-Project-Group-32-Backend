@@ -29,6 +29,7 @@ app = FastAPI(title=settings.APP_NAME, lifespan=lifespan)
 # Routers
 app.include_router(users_router)
 
+
 # Health checks
 @app.get("/healthz", include_in_schema=False, tags=["health"])
 @app.get("/health", include_in_schema=False, tags=["health"])

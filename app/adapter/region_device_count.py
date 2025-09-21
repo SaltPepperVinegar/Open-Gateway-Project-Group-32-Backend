@@ -27,7 +27,7 @@ def region_device_count(payload=None):
         "Content-Type": "application/json",
     }
 
-    if payload is    None:
+    if payload is None:
         payload = {
             "area": {
                 "areaType": "CIRCLE",
@@ -37,7 +37,9 @@ def region_device_count(payload=None):
             "filter": {"deviceType": ["human device"]},
         }
 
-    resp = requests.post(REGION_DEVICE_COUNT_URL, headers=headers, json=payload, verify=False)
+    resp = requests.post(
+        REGION_DEVICE_COUNT_URL, headers=headers, json=payload, verify=False
+    )
     print(resp.status_code, resp.text)
     resp.raise_for_status()
     data = resp.json()

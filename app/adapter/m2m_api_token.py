@@ -7,7 +7,6 @@ from .config import CLIENT_ID, CLIENT_SECRET, TOKEN_URL
 
 
 def get_token(scope=None):
-
     warnings.filterwarnings("ignore", category=InsecureRequestWarning)
 
     data = {

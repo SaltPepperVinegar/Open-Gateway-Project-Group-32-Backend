@@ -22,7 +22,9 @@ def get_auth_code(scope: str) -> str:
         "scope": scope,
     }
 
-    auth_url = f"{REALM_BASE}/protocol/openid-connect/auth?{urllib.parse.urlencode(params)}"
+    auth_url = (
+        f"{REALM_BASE}/protocol/openid-connect/auth?{urllib.parse.urlencode(params)}"
+    )
     print(auth_url)
     # 1) Start flow: land on Keycloak login form
     r = session.get(auth_url, allow_redirects=True, verify=False)
@@ -33,7 +35,11 @@ def get_auth_code(scope: str) -> str:
         raise RuntimeError("Login form not found (are you already logged in?)")
 
     action = urllib.parse.urljoin(r.url, form.get("action"))
-    inputs = {i.get("name"): i.get("value", "") for i in form.find_all("input") if i.get("name")}
+    inputs = {
+        i.get("name"): i.get("value", "")
+        for i in form.find_all("input")
+        if i.get("name")
+    }
 
     # Fill username/password (Keycloak uses 'username' + 'password' normally)
     inputs["username"] = (
@@ -51,6 +57,8 @@ def get_auth_code(scope: str) -> str:
         auth_code = urllib.parse.parse_qs(q).get("code", [None])[0]
 
     if not auth_code:
-        raise RuntimeError("Could not capture authorization code before redirecting to localhost.")
+        raise RuntimeError(
+            "Could not capture authorization code before redirecting to localhost."
+        )
     session.close()
     return auth_code
