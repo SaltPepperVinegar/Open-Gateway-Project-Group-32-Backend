@@ -4,7 +4,9 @@ on:
   push:
     branches: [ main ]
     tags: ["v*.*.*"]
+  pull_request:
 
+  
 env:
   IMAGE_NAME: open-gateway-project-backend
   REGISTRY: ghcr.io
@@ -44,17 +46,24 @@ jobs:
             echo "version_tag=" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/saltpeppervinegar/open-gateway-project-backend
+          tags: |
+            type=sha,format=short        # 7-char sha
+            type=raw,value=latest
+            type=ref,event=tag           # v1.2.3 etc. on tag builds
+
       - name: Build & push
         uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile
           push: true
-          # add more platforms if you need: linux/arm64
           platforms: linux/amd64
-          tags: |
-            ${{ env.REGISTRY }}/${{ env.GHCR_NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.sha_tag }}
-            ${{ env.REGISTRY }}/${{ env.GHCR_NAMESPACE }}/${{ env.IMAGE_NAME }}:latest
-            ${{ steps.vars.outputs.version_tag && format('{0}/{1}/{2}:{3}', env.REGISTRY, env.GHCR_NAMESPACE, env.IMAGE_NAME, steps.vars.outputs.version_tag) || '' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
