@@ -1,0 +1,22 @@
+pip-tools==7.4.1
+pytest
+pytest-asyncio
+ruff
+black
+
+mypy
+types-requests
+types-urllib3
+types-beautifulsoup4
+
+# runtime libs mypy needs to import
+fastapi
+pydantic[email]
+pydantic-settings
+beanie
+motor
+requests
+beautifulsoup4
+httpx<0.28
+
+

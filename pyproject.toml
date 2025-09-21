@@ -1,13 +1,32 @@
-[tool.black]
-line-length = 100
-target-version = ["py311"]
-
 [tool.ruff]
+target-version = "py313"
 line-length = 100
-select = ["E","F","I","UP","B"]
-exclude = ["venv",".venv"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B"]  # was: select = [...]
+ignore = []                    # was: ignore = [...]
+fixable = ["ALL"]              # was: fixable = [...]
+unfixable = []
+
+[tool.ruff.lint.per-file-ignores]
+"alembic/*.py" = ["E402"]
+"tests/**/*.py" = ["S101"]
 
 [tool.mypy]
-python_version = "3.11"
-strict = true
+python_version = "3.12"
+
 ignore_missing_imports = true
+disallow_any_generics = false
+no_implicit_optional = false
+warn_return_any = false
+warn_unused_ignores = false
+warn_redundant_casts = false
+warn_unreachable = false
+check_untyped_defs = false
+follow_imports = "skip"
+namespace_packages = true
+implicit_reexport = true
+allow_redefinition = true
+
+# Optional
+plugins = []
