@@ -18,10 +18,7 @@ pip install -r requirements.txt
 
 
 #run the server
-uvicorn app.main:app --reload
-
-#mock mongodb
-docker run --rm -d --name mongo_poc -p 27017:27017 mongo:7
+docker compose up --build
 
 #quick test
 python -m pytest -q
