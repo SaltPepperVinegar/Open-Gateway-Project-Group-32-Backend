@@ -1,108 +1,54 @@
-# --- Python bytecode / cache ---
+# --- Python ---
 __pycache__/
 *.py[cod]
-*$py.class
-
-# --- C extensions ---
+*.pyo
+*.pyd
+*.pdb
 *.so
-
-# --- Distribution / packaging ---
-.Python
-build/
-dist/
-develop-eggs/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-share/python-wheels/
-pip-wheel-metadata/
-*.egg-info/
-.installed.cfg
 *.egg
-MANIFEST
+*.egg-info/
+dist/
+build/
+.eggs/
 
-# --- PyInstaller ---
-*.manifest
-*.spec
+# Bytecode cache
+*.pyc
 
-# --- Logs / installer logs ---
-pip-log.txt
-pip-delete-this-directory.txt
-*.log
-
-# --- Unit test / coverage ---
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
-
-# --- Translations ---
-*.mo
-*.pot
-
-# --- Django (optional) ---
-# local_settings.py
-# db.sqlite3
-# db.sqlite3-journal
-# media/
-
-# --- Flask (optional) ---
-instance/
-.webassets-cache
-
-# --- Scrapy ---
-.scrapy/
-
-# --- Sphinx / MkDocs docs ---
-docs/_build/
-site/
-
-# --- Jupyter / IPython ---
-.ipynb_checkpoints/
-profile_default/
-ipython_config.py
-
-# --- PEP 582 / pyflow ---
-__pypackages__/
-
-# --- Environments ---
-.env
-.venv
-env/
+# --- Virtual environments ---
+.venv/
 venv/
 ENV/
-env.bak/
-venv.bak/
-.python-version  # pyenv
+env/
+.venv*/
+pip-wheel-metadata/
 
-# --- Editors / IDEs ---
+# --- FastAPI / Beanie / Mongo ---
+# Local Mongo data directory (if you mount ./tmp/mongo or similar)
+tmp/
+data/
+*.db
+
+# --- Environment variables ---
+.env
+.env.*
+!env.example   # keep a template checked in
+
+# --- Logs ---
+*.log
+*.log.*
+logs/
+*.out
+
+# --- OS files ---
+.DS_Store
+Thumbs.db
+
+# --- Editors ---
 .vscode/
 .idea/
-.spyderproject
-.spyproject
-.ropeproject
+*.swp
+*.swo
 
-# --- Type checkers / linters ---
-.mypy_cache/
-.dmypy.json
-dmypy.json
-.pyre/
-.pytype/
-.ruff_cache/
-
-# --- Cython debug symbols ---
-cython_debug/
+# --- Docker ---
+# Ignore volumes and local compose overrides
+docker-compose.override.yml

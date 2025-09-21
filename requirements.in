@@ -1,0 +1,13 @@
+# requirements.in
+fastapi[standard]
+uvicorn[standard]
+beanie
+motor
+pydantic-settings
+python-dotenv
+httpx<0.28
+requests
+urllib3
+beautifulsoup4
+pytest
+pytest-asyncio
