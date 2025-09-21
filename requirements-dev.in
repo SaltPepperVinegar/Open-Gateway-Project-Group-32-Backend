@@ -17,3 +17,5 @@ beanie
 motor
 requests
 beautifulsoup4
+httpx
+
