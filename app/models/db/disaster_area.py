@@ -10,7 +10,9 @@ from app.models.general import GeoJSONPolygon
 
 
 class DisasterArea(Document):
-    creator_id: ObjectId = Field(..., description="Manager user who created this disaster area")
+    creator_id: ObjectId = Field(
+        ..., description="Manager user who created this disaster area"
+    )
     title: str
     description: str
     boundary: GeoJSONPolygon = Field(..., description="GeoJSON Polygon")

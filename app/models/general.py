@@ -18,8 +18,12 @@ class GeoJSONPolygon(BaseModel):
             if len(ring) < 4:
                 raise ValueError("Each linear ring must have at least 4 positions")
             if ring[0] != ring[-1]:
-                raise ValueError("Linear ring must be closed (first and last positions must match)")
+                raise ValueError(
+                    "Linear ring must be closed (first and last positions must match)"
+                )
             for point in ring:
                 if len(point) != 2:
-                    raise ValueError("Each position must be a [lng, lat] coordinate pair")
+                    raise ValueError(
+                        "Each position must be a [lng, lat] coordinate pair"
+                    )
         return coords
