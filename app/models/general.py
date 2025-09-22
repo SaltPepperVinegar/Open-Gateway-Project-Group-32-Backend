@@ -6,15 +6,14 @@ from pydantic import BaseModel, Field, field_validator
 class GeoJSONPolygon(BaseModel):
     type: Literal["Polygon"] = Field("Polygon", description="type must be 'Polygon'")
     coordinates: List[List[List[float]]] = Field(
-        ..., 
-        description="Array of linear rings, each a list of [lng, lat] points"
+        ..., description="Array of linear rings, each a list of [lng, lat] points"
     )
 
     @field_validator("coordinates")
     def validate_coordinates(cls, coords):
         if not coords or not isinstance(coords, list):
             raise ValueError("Polygon must have at least one linear ring")
-        
+
         for ring in coords:
             if len(ring) < 4:
                 raise ValueError("Each linear ring must have at least 4 positions")
