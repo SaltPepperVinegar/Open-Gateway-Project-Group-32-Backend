@@ -42,9 +42,7 @@ def population_density_data(payload=None):
             "endTime": "2025-08-31T10:01:00Z",
         }
 
-    resp = requests.post(
-        POPULATION_DENSITY_DATA_URL, headers=headers, json=payload, verify=False
-    )
+    resp = requests.post(POPULATION_DENSITY_DATA_URL, headers=headers, json=payload, verify=False)
     print(resp.status_code, resp.text)
     resp.raise_for_status()
     data = resp.json()

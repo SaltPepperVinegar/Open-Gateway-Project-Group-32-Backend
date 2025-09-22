@@ -32,9 +32,7 @@ def number_verification(payload=None):
             "phoneNumber": "+61412345678",
         }
 
-    resp = requests.post(
-        NUMBER_VERFICATION_URL, headers=headers, json=payload, verify=False
-    )
+    resp = requests.post(NUMBER_VERFICATION_URL, headers=headers, json=payload, verify=False)
     print(resp.status_code, resp.text)
     resp.raise_for_status()
     data = resp.json()
