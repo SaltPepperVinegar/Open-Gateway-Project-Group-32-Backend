@@ -37,3 +37,8 @@ plugins = []
 pythonpath = [
   "."
 ]
+
+filterwarnings = [
+  #warning possibly in one of the libraries which uses instance.model_field in pydantic
+  "ignore::pydantic.warnings.PydanticDeprecatedSince211",
+]
