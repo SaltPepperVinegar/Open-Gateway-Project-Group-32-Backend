@@ -52,3 +52,6 @@ Thumbs.db
 # --- Docker ---
 # Ignore volumes and local compose overrides
 docker-compose.override.yml
+
+# --- Secrets folder (private keys, ...) ---
+secrets/*
