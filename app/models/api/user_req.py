@@ -1,6 +1,5 @@
-from pydantic import BaseModel, EmailStr
+from app.models.base.user import UserBase
 
 
-class CreateUserReq(BaseModel):
-    username: str
-    email: EmailStr
+class UserCreateReq(UserBase):
+    password: str
