@@ -2,7 +2,7 @@ from passlib.hash import bcrypt
 
 from app.models.api.user_req import UserCreateReq
 from app.models.api.user_res import UserCreateRes
-from app.models.db.user import UserDoc
+from app.models.base.user import UserCreate
 from app.repository.users_repo import create_user, get_user_by_username
 
 
@@ -12,7 +12,7 @@ async def register_user(req: UserCreateReq) -> UserCreateRes:
         raise ValueError("Username already exists")
 
     hashed = bcrypt.hash(req.password)
-    user_doc = UserDoc(
+    user_doc = UserCreate(
         username=req.username,
         email=req.email,
         role=req.role,
@@ -21,9 +21,9 @@ async def register_user(req: UserCreateReq) -> UserCreateRes:
     saved = await create_user(user_doc)
 
     return UserCreateRes(
-        id=str(saved.id),
+        id=str(saved.userID),
         username=saved.username,
         email=saved.email,
-        role=req.role,
+        role=saved.role,
         meta={"created": True},
     )
