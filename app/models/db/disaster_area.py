@@ -1,11 +1,13 @@
-from typing import Optional
 from datetime import datetime
+from typing import Optional
+
 from beanie import Document
-from pydantic import Field
 from bson import ObjectId
+from pydantic import Field
 from pymongo import GEOSPHERE, IndexModel
 
 from app.models.general import GeoJSONPolygon
+
 
 class DisasterArea(Document):
     creator_id: ObjectId = Field(..., description="Manager user who created this disaster area")
