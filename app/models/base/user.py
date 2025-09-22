@@ -15,5 +15,5 @@ class UserBase(BaseModel):
 
 
 class UserCreate(UserBase):
-    password_hash: str | None
-    userID: str | None
+    password_hash: str | None = None
+    userID: str | None = None

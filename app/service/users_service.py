@@ -21,9 +21,9 @@ async def register_user(req: UserCreateReq) -> UserCreateRes:
     saved = await create_user(user_doc)
 
     return UserCreateRes(
-        id=str(saved.id),
+        id=str(saved.userID),
         username=saved.username,
         email=saved.email,
-        role=req.role,
+        role=saved.role,
         meta={"created": True},
     )

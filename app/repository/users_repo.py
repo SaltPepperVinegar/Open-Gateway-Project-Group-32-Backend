@@ -7,7 +7,7 @@ async def create_user(user_create: UserCreate) -> UserCreate:
         username=user_create.username,
         email=user_create.email,
         role=user_create.role,
-        password_hash=user_create.hashed,
+        password_hash=user_create.password_hash,
     )
     user_create.userID = str(userdoc.id)
     await userdoc.insert()
