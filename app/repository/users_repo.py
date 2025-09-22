@@ -15,4 +15,4 @@ async def create_user(user_create: UserCreate) -> UserCreate:
 
 
 async def get_user_by_username(username: str) -> UserDoc | None:
-    return await UserDoc.find_one(UserDoc.username == username)
+    return await UserDoc.find_one({"username": username})

@@ -17,7 +17,7 @@ def anyio_backend():
 
 @pytest.fixture(scope="session", autouse=True)
 async def setup_test_db():
-    os.environ.setdefault("MONGO_DSN", "mongodb://localhost:27017/fastapi_test")
+    os.environ.setdefault("MONGO_DSN", "mongodb://localhost:27017/fastapi_db")
     client = AsyncIOMotorClient(os.environ["MONGO_DSN"])
     db = client.get_default_database()
     await init_beanie(database=db, document_models=[UserDoc])
