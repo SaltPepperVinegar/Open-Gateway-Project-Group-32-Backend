@@ -18,5 +18,5 @@ motor
 requests
 beautifulsoup4
 httpx<0.28
-
+passlib[bcrypt]
 

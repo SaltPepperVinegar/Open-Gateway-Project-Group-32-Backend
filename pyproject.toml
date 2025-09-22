@@ -30,3 +30,10 @@ allow_redefinition = true
 
 # Optional
 plugins = []
+
+
+
+[tool.pytest.ini_options]
+pythonpath = [
+  "."
+]

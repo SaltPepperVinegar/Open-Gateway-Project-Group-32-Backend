@@ -1,10 +1,8 @@
 from typing import Any
 
-from pydantic import BaseModel, EmailStr
+from app.models.base.user import UserBase
 
 
-class UserRes(BaseModel):
+class UserCreateRes(UserBase):
     id: str
-    username: str
-    email: EmailStr
     meta: dict[str, Any] | None = None

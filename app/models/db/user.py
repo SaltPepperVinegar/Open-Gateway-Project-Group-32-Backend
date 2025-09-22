@@ -1,10 +1,10 @@
 from beanie import Document
-from pydantic import EmailStr
+
+from app.models.base.user import UserBase
 
 
-class UserDoc(Document):
-    username: str
-    email: EmailStr
+class UserDoc(UserBase, Document):
+    password_hash: str
 
     class Settings:
         name = "users"  # collection name
