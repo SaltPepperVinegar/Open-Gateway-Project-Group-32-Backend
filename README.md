@@ -52,3 +52,4 @@ pip install -r requirements-dev.txt
 ## before you commit 
 ruff check .
 black . 
+mypy app

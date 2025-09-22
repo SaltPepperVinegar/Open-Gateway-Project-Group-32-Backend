@@ -10,7 +10,20 @@ async def register_user(req: UserCreateReq) -> UserCreateRes:
     existing = await get_user_by_username(req.username)
     if existing:
         raise ValueError("Username already exists")
+
     hashed = bcrypt.hash(req.password)
-    user_doc = UserDoc(username=req.username, email=req.email, password_hash=hashed)
+    user_doc = UserDoc(
+        username=req.username,
+        email=req.email,
+        role=req.role,
+        password_hash=hashed,
+    )
     saved = await create_user(user_doc)
-    return UserCreateRes(id=str(saved.id), username=saved.username, email=saved.email)
+
+    return UserCreateRes(
+        id=str(saved.id),
+        username=saved.username,
+        email=saved.email,
+        role=req.role,
+        meta={"created": True},
+    )
