@@ -19,6 +19,8 @@ pip install -r requirements.txt
 pip install -r requirements-dev.txt
 
 pre-commit install
+
+cp .env.example .env
 ```
 
 ### How to run the server 
