@@ -12,3 +12,8 @@ class UserBase(BaseModel):
     username: str
     email: EmailStr
     role: Role
+
+
+class UserCreate(UserBase):
+    password_hash: str | None
+    userID: str | None
