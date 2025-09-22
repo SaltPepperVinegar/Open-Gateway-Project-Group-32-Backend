@@ -7,10 +7,8 @@ Runs on **Python 3.13** inside a virtual environment.
 
 ---
 
-## 🚀 Getting Started
-
-### 1. Install Python (via [uv](https://github.com/astral-sh/uv))
-
+## 🚀 Setup
+ 
 ```bash
 uv python install 3.13.0 --force
 uv venv --python 3.13 .venv
@@ -22,6 +20,7 @@ pip install -r requirements-dev.txt
 
 pre-commit install
 ```
+
 ### How to run the server 
 
 ```bash
@@ -33,7 +32,6 @@ docker compose up --build
 
 python -m pytest -q
 ```
-
 
 ### everytime after you added dependency
 
