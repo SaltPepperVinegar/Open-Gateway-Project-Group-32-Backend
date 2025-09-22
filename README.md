@@ -7,24 +7,25 @@ Runs on **Python 3.13** inside a virtual environment.
 
 ---
 
-## 🚀 Getting Started
-
+## 🚀 Setup
+ 
+```bash
 uv python install 3.13.0 --force
-
 uv venv --python 3.13 .venv
-
 source .venv/bin/activate
-
-
+ 
 python -m pip install -U pip setuptools wheel "pip-tools==7.4.1"
-
 pip install -r requirements.txt
-
 pip install -r requirements-dev.txt
 
 pre-commit install
 
+cp .env.example .env
+```
 
+### How to run the server 
+
+```bash
 #run the server
 
 docker compose up --build
@@ -32,24 +33,28 @@ docker compose up --build
 #quick test
 
 python -m pytest -q
+```
 
+### everytime after you added dependency
 
-
-
-## everytime after you added dependency
+```bash
 pip-compile --no-header --no-annotate --strip-extras \
 -o requirements.txt requirements.in
-if [ -f requirements-dev.in ]; then
 pip-compile --no-header --no-annotate --strip-extras \
     -o requirements-dev.txt requirements-dev.in
-fi
 
 pip install -r requirements.txt
 
 pip install -r requirements-dev.txt
-
+```
 
 ## before you commit 
+
+```bash
+#Python linter
 ruff check .
+#Formatter
 black . 
+#Type checker
 mypy app
+```
