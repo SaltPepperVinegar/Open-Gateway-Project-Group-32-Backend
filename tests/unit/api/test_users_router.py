@@ -6,5 +6,5 @@ VALID_BODY = {
 }
 
 
-def test_create_user_success(client, monkeypatch):
+def test_create_user_success():
     assert True
