@@ -1,10 +1,10 @@
 from contextlib import asynccontextmanager
 
+import firebase_admin
 from beanie import init_beanie
 from fastapi import FastAPI
-from motor.motor_asyncio import AsyncIOMotorClient
-import firebase_admin
 from firebase_admin import credentials, get_app
+from motor.motor_asyncio import AsyncIOMotorClient
 
 from app.api.v1.users import router as users_router
 from app.core.config import settings
@@ -30,7 +30,6 @@ async def lifespan(app: FastAPI):
         fb_app = firebase_admin.initialize_app(cred)
     app.state.firebase_app = fb_app
 
-    
     try:
         yield
     finally:

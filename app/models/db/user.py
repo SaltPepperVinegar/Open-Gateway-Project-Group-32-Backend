@@ -1,5 +1,5 @@
-from pydantic import EmailStr
 from beanie import Document, Indexed
+from pydantic import EmailStr
 
 from app.models.base.user import UserBase
 
