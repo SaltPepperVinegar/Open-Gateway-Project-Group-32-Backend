@@ -1,8 +1,11 @@
+from datetime import datetime
+from typing import Annotated
+
 from beanie import Document, Indexed
 from pydantic import EmailStr, Field
-from typing import Annotated
-from datetime import datetime
+
 from app.models.embedded.enums import UserRole
+
 
 class UserDocument(Document):
     """

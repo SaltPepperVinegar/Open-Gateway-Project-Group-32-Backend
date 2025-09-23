@@ -1,8 +1,8 @@
 from fastapi import HTTPException
 from pymongo.errors import DuplicateKeyError
 
-from app.models.DTO.user import UserCreateDTO
 from app.models.db.user import UserDocument
+from app.models.DTO.user import UserCreateDTO
 
 
 async def create_user(user: UserCreateDTO) -> UserCreateDTO:
