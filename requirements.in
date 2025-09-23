@@ -13,4 +13,3 @@ beautifulsoup4
 pytest
 pytest-asyncio
 pip-tools==7.4.1
-firebase-admin
