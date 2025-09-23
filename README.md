@@ -23,10 +23,35 @@ pre-commit install
 cp .env.example .env
 ```
 
+### Firebase Auth Setup for Development
+
+#### 1. Generate Service Account Key
+- Go to [Firebase Console](https://console.firebase.google.com/)  
+- Select project **ogwp** → **Project settings** → **Service accounts**  
+- Click **Generate new private key**  
+- Download the `.json` file (keep it private, do not commit)
+
+#### 2. Store the Key
+- Move the file into:  
+  `Open-Gateway-Project-Group-32/secrets/your-firebase-private-key.json`
+
+#### 3. Configure `.env`
+Add the following new line to .env
+`FIREBASE_CRED_PATH=secrets/your-firebase-private-key.json`
+
+#### 4. Access in code
+```
+from app.core.config import settings
+print(settings.FIREBASE_CRED_PATH)
+# -> secrets/your-firebase-private-key.json
+```
+
 ### How to run the server 
 
 ```bash
 #run the server
+
+docker compose up -d mongo
 
 docker compose up --build
 

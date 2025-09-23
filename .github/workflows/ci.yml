@@ -13,10 +13,10 @@ jobs:
     services:
       mongo:
         image: mongo:7
+        ports: ["27017:27017"]
         options: >-
-          --health-cmd="mongosh --quiet --eval 'db.adminCommand({ ping: 1 }).ok' || exit 1"
+          --health-cmd="mongosh --eval 'db.runCommand({ ping: 1 })'"
           --health-interval=5s --health-timeout=5s --health-retries=30
-
 
     steps:
       - uses: actions/checkout@v4
@@ -65,10 +65,10 @@ jobs:
       - name: Type-check (mypy)
         run: mypy app
 
-      - name: Run tests
+      - name: Run tests (unit first, then integration)
         env:
-          USE_DB: "1"
-          MONGO_DSN: "mongodb://localhost:27017/test_db"
-          PYTHONPATH: ${{ github.workspace }}   # 👈 makes `app/` importable
+          # IMPORTANT: Use localhost here because the service is bound to the runner network
+          MONGO_DSN: mongodb://localhost:27017/fastapi_db
         run: |
-          pytest -q --maxfail=1
+          pytest -q tests/unit --maxfail=1
+          pytest -q tests/integration --maxfail=1

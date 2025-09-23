@@ -20,7 +20,10 @@ async def register_user_service(
     auth.set_custom_user_claims(uid, {"role": role.value})
 
     new_user = UserCreateDTO(
-        uid=uid, display_name=req.display_name, email=email, role=role
+        uid=uid,
+        display_name=req.display_name,
+        email=email,
+        role=role
     )
 
     created_user = await create_user(new_user)
