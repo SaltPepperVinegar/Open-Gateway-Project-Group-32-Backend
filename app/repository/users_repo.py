@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 from pymongo.errors import DuplicateKeyError
 
-from app.models.base.user import UserBase, UserCreateBase, UserSearchBase
+from app.models.DTO.user import UserBase, UserCreateBase, UserSearchBase
 from app.models.db.user import UserDocument
 
 

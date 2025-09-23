@@ -4,7 +4,7 @@ from firebase_admin import auth
 
 from app.core.config import settings
 from app.models.api.user import UserRegisterReq, UserRegisterRes
-from app.models.base.user import Role, UserCreateBase
+from app.models.DTO.user import Role, UserCreateBase
 from app.repository.users_repo import create_user
 
 
