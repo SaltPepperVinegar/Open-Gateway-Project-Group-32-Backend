@@ -6,7 +6,7 @@ from httpx import ASGITransport, AsyncClient
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from app.main import app as real_app
-from app.models.db.user import UserDoc
+from app.models.db.user import UserDocument
 
 
 # Make anyio backend session-scoped so it matches your session-scoped fixtures
@@ -20,7 +20,7 @@ async def setup_test_db():
     os.environ.setdefault("MONGO_DSN", "mongodb://localhost:27017/fastapi_db")
     client = AsyncIOMotorClient(os.environ["MONGO_DSN"])
     db = client.get_default_database()
-    await init_beanie(database=db, document_models=[UserDoc])
+    await init_beanie(database=db, document_models=[UserDocument])
     yield
     await client.drop_database(db.name)
 

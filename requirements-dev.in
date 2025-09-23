@@ -21,3 +21,5 @@ httpx<0.28
 passlib[bcrypt]
 bcrypt==3.2.2
 
+firebase_admin
+

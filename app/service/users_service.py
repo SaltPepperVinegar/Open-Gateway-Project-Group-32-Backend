@@ -1,29 +1,28 @@
-from passlib.hash import bcrypt
+from typing import Any, Dict
 
-from app.models.api.user_req import UserCreateReq
-from app.models.api.user_res import UserCreateRes
-from app.models.base.user import UserCreate
-from app.repository.users_repo import create_user, get_user_by_username
+from firebase_admin import auth
+
+from app.core.config import settings
+from app.models.api.user import UserRegisterReq, UserRegisterRes
+from app.models.DTO.user import UserCreateDTO
+from app.models.embedded.enums import UserRole
+from app.repository.users_repo import create_user
 
 
-async def register_user(req: UserCreateReq) -> UserCreateRes:
-    existing = await get_user_by_username(req.username)
-    if existing:
-        raise ValueError("Username already exists")
+async def register_user_service(
+    req: UserRegisterReq, decoded_token: Dict[str, Any]
+) -> UserRegisterRes:
+    uid = decoded_token["uid"]
+    email = decoded_token["email"]
+    role = UserRole.MANAGER if email in settings.MANAGER_EMAILS else UserRole.WORKER
 
-    hashed = bcrypt.hash(req.password)
-    user_doc = UserCreate(
-        username=req.username,
-        email=req.email,
-        role=req.role,
-        password_hash=hashed,
+    # Set role as a field of custom user claims
+    auth.set_custom_user_claims(uid, {"role": role.value})
+
+    new_user = UserCreateDTO(
+        uid=uid, display_name=req.display_name, email=email, role=role
     )
-    saved = await create_user(user_doc)
 
-    return UserCreateRes(
-        id=str(saved.userID),
-        username=saved.username,
-        email=saved.email,
-        role=saved.role,
-        meta={"created": True},
-    )
+    created_user = await create_user(new_user)
+
+    return UserRegisterRes(**created_user.model_dump())

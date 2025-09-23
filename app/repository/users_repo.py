@@ -1,18 +1,16 @@
-from app.models.base.user import UserCreate
-from app.models.db.user import UserDoc
+from fastapi import HTTPException
+from pymongo.errors import DuplicateKeyError
+
+from app.models.db.user import UserDocument
+from app.models.DTO.user import UserCreateDTO
 
 
-async def create_user(user_create: UserCreate) -> UserCreate:
-    userdoc = UserDoc(
-        username=user_create.username,
-        email=user_create.email,
-        role=user_create.role,
-        password_hash=user_create.password_hash,
-    )
-    user_create.userID = str(userdoc.id)
-    await userdoc.insert()
-    return user_create
+async def create_user(user: UserCreateDTO) -> UserCreateDTO:
+    user_doc = UserDocument(**user.model_dump())
 
+    try:
+        await user_doc.insert()
+    except DuplicateKeyError as err:
+        raise HTTPException(status_code=400, detail="uid already exists") from err
 
-async def get_user_by_username(username: str) -> UserDoc | None:
-    return await UserDoc.find_one({"username": username})
+    return user
