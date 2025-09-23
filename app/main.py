@@ -24,7 +24,7 @@ async def lifespan(app: FastAPI):
 
     # Firebase Admin
     try:
-        fb_app = get_app()  # 已有实例则直接复用
+        fb_app = get_app()  # Reuse Firebase instance if exists
     except ValueError:
         cred = credentials.Certificate(settings.FIREBASE_CRED_PATH)
         fb_app = firebase_admin.initialize_app(cred)

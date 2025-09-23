@@ -1,11 +1,11 @@
 from fastapi import HTTPException
 from pymongo.errors import DuplicateKeyError
 
-from app.models.DTO.user import UserBase, UserCreateBase, UserSearchBase
+from app.models.DTO.user import UserCreateDTO
 from app.models.db.user import UserDocument
 
 
-async def create_user(user: UserCreateBase) -> UserCreateBase:
+async def create_user(user: UserCreateDTO) -> UserCreateDTO:
     user_doc = UserDocument(**user.model_dump())
 
     try:
@@ -14,7 +14,3 @@ async def create_user(user: UserCreateBase) -> UserCreateBase:
         raise HTTPException(status_code=400, detail="uid already exists") from err
 
     return user
-
-
-async def search_user(user: UserSearchBase) -> UserBase | None:
-    pass

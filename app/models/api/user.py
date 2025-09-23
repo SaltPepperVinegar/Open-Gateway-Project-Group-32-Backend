@@ -3,7 +3,6 @@ from datetime import datetime
 from app.models.embedded.enums import UserRole
 
 
-
 class UserRegisterReq(BaseModel):
     display_name: str = Field(min_length=1, max_length=100)
 

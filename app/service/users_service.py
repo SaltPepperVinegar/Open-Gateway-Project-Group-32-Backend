@@ -4,7 +4,8 @@ from firebase_admin import auth
 
 from app.core.config import settings
 from app.models.api.user import UserRegisterReq, UserRegisterRes
-from app.models.DTO.user import Role, UserCreateBase
+from app.models.DTO.user import UserCreateDTO
+from app.models.embedded.enums import UserRole
 from app.repository.users_repo import create_user
 
 
@@ -13,13 +14,16 @@ async def register_user_service(
 ) -> UserRegisterRes:
     uid = decoded_token["uid"]
     email = decoded_token["email"]
-    role = Role.MANAGER if email in settings.MANAGER_EMAILS else Role.WORKER
+    role = UserRole.MANAGER if email in settings.MANAGER_EMAILS else UserRole.WORKER
 
     # Set role as a field of custom user claims
     auth.set_custom_user_claims(uid, {"role": role.value})
 
-    new_user = UserCreateBase(
-        uid=uid, email=email, role=role, display_name=req.display_name
+    new_user = UserCreateDTO(
+        uid=uid,
+        display_name=req.display_name,
+        email=email,
+        role=role
     )
 
     created_user = await create_user(new_user)
