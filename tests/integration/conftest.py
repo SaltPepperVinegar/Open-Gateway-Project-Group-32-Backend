@@ -20,22 +20,14 @@ async def init_db():
         database=client[settings.DB_NAME_TEST],
         document_models=DB_DOCUMENT_MODELS
     )
-
-    for model in DB_DOCUMENT_MODELS:
-        await model.get_pymongo_collection().delete_many({})
     
     yield
-
-    for model in DB_DOCUMENT_MODELS:
-        await model.get_pymongo_collection().delete_many({})
 
     client.close()
 
 
 @pytest.fixture(scope="function")
 async def clean_db(init_db):
-    print(DB_DOCUMENT_MODELS)
-
     for model in DB_DOCUMENT_MODELS:
         await model.get_pymongo_collection().delete_many({})
 
