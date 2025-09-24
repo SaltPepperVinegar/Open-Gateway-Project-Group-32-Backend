@@ -1,7 +1,8 @@
-from typing import List
-from pydantic_settings import BaseSettings, SettingsConfigDict
 import base64
+from typing import List, Optional
 
+from pydantic import field_validator
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -16,15 +17,24 @@ class Settings(BaseSettings):
     APP_NAME_TEST: str = "Disaster Rescue API (Test)"
     DB_NAME: str = "opgw"
     DB_NAME_TEST: str = "opgw_test"
-    
+
     MANAGER_EMAILS: List[str] = ["manager_1@email.com", "manager_2@email.com"]
 
     # Terms will be loaded from .env or os.environ:
-    MONGO_DSN: str | None = None
-    FIREBASE_CRED: str | None = None
-    FIREBASE_FRONTEND_CRED: str | None = None
-    
+    MONGO_DSN: Optional[str] = None
+    FIREBASE_CRED: Optional[str] = None
+    FIREBASE_FRONTEND_CRED: Optional[str] = None
+
+    @field_validator("FIREBASE_CRED", "FIREBASE_FRONTEND_CRED", mode="before")
+    def decode_base64_if_needed(cls, v: Optional[str]) -> Optional[str]:
+        """Decode base64 values if they look encoded, otherwise return as-is."""
+        if not v:
+            return None
+        try:
+            return base64.b64decode(v.encode("utf-8")).decode("utf-8")
+        except Exception:
+            # Fallback: assume it's already plaintext
+            return v
+
 
 settings = Settings()
-settings.FIREBASE_CRED = base64.b64decode(settings.FIREBASE_CRED.encode("utf-8")).decode("utf-8")
-settings.FIREBASE_FRONTEND_CRED = base64.b64decode(settings.FIREBASE_FRONTEND_CRED.encode("utf-8")).decode("utf-8")

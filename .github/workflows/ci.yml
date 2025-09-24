@@ -78,6 +78,10 @@ jobs:
         env:
           FIREBASE_CRED_PATH: ${{ env.FIREBASE_CRED_PATH }}
           MONGO_DSN: ${{ secrets.MONGODB_KEY }}
+          FIREBASE_CRED: ${{ secrets.FIREBASE_CRED }}
+          FIREBASE_FRONTEND_CRED: ${{ secrets.FIREBASE_FRONTEND_CRED }}
+            
+
         run: |
           pytest -q tests/unit --maxfail=1
           pytest -q tests/integration --maxfail=1

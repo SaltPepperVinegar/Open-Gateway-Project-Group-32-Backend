@@ -1,12 +1,12 @@
-import httpx
-from datetime import datetime
 import json
+from datetime import datetime
 
+import firebase_admin
+import httpx
 import pytest
 from beanie import init_beanie
-from motor.motor_asyncio import AsyncIOMotorClient
 from firebase_admin import credentials, get_app
-import firebase_admin
+from motor.motor_asyncio import AsyncIOMotorClient
 
 from app.core.config import settings
 from app.main import DB_DOCUMENT_MODELS
@@ -17,10 +17,9 @@ async def init_db():
     client = AsyncIOMotorClient(settings.MONGO_DSN)
 
     await init_beanie(
-        database=client[settings.DB_NAME_TEST],
-        document_models=DB_DOCUMENT_MODELS
+        database=client[settings.DB_NAME_TEST], document_models=DB_DOCUMENT_MODELS
     )
-    
+
     yield
 
     client.close()
@@ -101,7 +100,4 @@ def firebase_log_in(firebase_new_user, init_firebase):
 
     data = r.json()
 
-    yield {
-        "uid": data["localId"],
-        "token": data["idToken"]
-    }
+    yield {"uid": data["localId"], "token": data["idToken"]}

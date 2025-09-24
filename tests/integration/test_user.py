@@ -1,18 +1,18 @@
-import pytest
 from datetime import datetime
-from app.models.api.user import UserRegisterReq, UserRegisterRes
+
+import pytest
+
+from app.models.api.user import UserRegisterRes
 from app.models.embedded.enums import UserRole
-from tests.integration.utils import *
+from tests.integration.utils import api_post
 
 pytestmark = pytest.mark.asyncio
 
 
 async def test_user_register_default(init_firebase, firebase_log_in, init_db, clean_db):
-    payload = {
-        "display_name": "Test User"
-    }
+    payload = {"display_name": "Test User"}
 
-    resp = await api_post("/api/v1/users", payload, firebase_log_in['token'])
+    resp = await api_post("/api/v1/users", payload, firebase_log_in["token"])
     assert resp.status_code == 201, resp.text
 
     data = resp.json()

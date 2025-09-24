@@ -1,5 +1,6 @@
-from contextlib import asynccontextmanager
 import json
+from contextlib import asynccontextmanager
+from typing import cast
 
 import firebase_admin
 from beanie import init_beanie
@@ -12,6 +13,7 @@ from app.core.config import settings
 from app.models.db.user import UserDocument
 
 DB_DOCUMENT_MODELS = [UserDocument]
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -28,7 +30,8 @@ async def lifespan(app: FastAPI):
     try:
         fb_app = get_app()  # Reuse Firebase instance if exists
     except ValueError:
-        cred = credentials.Certificate(json.loads(settings.FIREBASE_CRED))
+        cred_json = cast(str, settings.FIREBASE_CRED)
+        cred = credentials.Certificate(json.loads(cred_json))
         fb_app = firebase_admin.initialize_app(cred)
     app.state.firebase_app = fb_app
 

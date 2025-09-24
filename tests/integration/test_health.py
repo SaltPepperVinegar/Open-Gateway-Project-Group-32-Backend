@@ -1,8 +1,9 @@
 import pytest
-from httpx import AsyncClient
-from tests.integration.utils import *
+
+from tests.integration.utils import api_get
 
 pytestmark = pytest.mark.asyncio
+
 
 async def test_health():
     r = await api_get("/healthz")
