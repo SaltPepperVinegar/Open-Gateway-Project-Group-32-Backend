@@ -1,6 +1,7 @@
 from typing import List
-
 from pydantic_settings import BaseSettings, SettingsConfigDict
+import base64
+
 
 
 class Settings(BaseSettings):
@@ -20,7 +21,10 @@ class Settings(BaseSettings):
 
     # Terms will be loaded from .env or os.environ:
     MONGO_DSN: str | None = None
-    FIREBASE_CRED_PATH: str | None = None
-
+    FIREBASE_CRED: str | None = None
+    FIREBASE_FRONTEND_CRED: str | None = None
+    
 
 settings = Settings()
+settings.FIREBASE_CRED = base64.b64decode(settings.FIREBASE_CRED.encode("utf-8")).decode("utf-8")
+settings.FIREBASE_FRONTEND_CRED = base64.b64decode(settings.FIREBASE_FRONTEND_CRED.encode("utf-8")).decode("utf-8")
