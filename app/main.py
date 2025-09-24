@@ -1,4 +1,6 @@
+import json
 from contextlib import asynccontextmanager
+from typing import cast
 
 import firebase_admin
 from beanie import init_beanie
@@ -10,6 +12,8 @@ from app.api.v1.users import router as users_router
 from app.core.config import settings
 from app.models.db.user import UserDocument
 
+DB_DOCUMENT_MODELS = [UserDocument]
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -17,8 +21,8 @@ async def lifespan(app: FastAPI):
 
     # Mongo / Beanie
     db_client = AsyncIOMotorClient(settings.MONGO_DSN)
-    db = db_client.get_default_database()
-    await init_beanie(database=db, document_models=[UserDocument])
+    db = db_client.get_database(settings.DB_NAME)
+    await init_beanie(database=db, document_models=DB_DOCUMENT_MODELS)
     app.state.mongo_client = db_client
     app.state.db = db
 
@@ -26,7 +30,8 @@ async def lifespan(app: FastAPI):
     try:
         fb_app = get_app()  # Reuse Firebase instance if exists
     except ValueError:
-        cred = credentials.Certificate(settings.FIREBASE_CRED_PATH)
+        cred_json = cast(str, settings.FIREBASE_CRED)
+        cred = credentials.Certificate(json.loads(cred_json))
         fb_app = firebase_admin.initialize_app(cred)
     app.state.firebase_app = fb_app
 
