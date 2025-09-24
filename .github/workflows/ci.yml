@@ -9,15 +9,14 @@ jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 20
-
-    services:
-      mongo:
-        image: mongo:7
-        ports: ["27017:27017"]
-        options: >-
-          --health-cmd="mongosh --eval 'db.runCommand({ ping: 1 })'"
-          --health-interval=5s --health-timeout=5s --health-retries=30
-
+#    services:
+#      mongo:
+#        image: mongo:7
+#        ports: ["27017:27017"]
+#        options: >-
+#          --health-cmd="mongosh --eval 'db.runCommand({ ping: 1 })'"
+#          --health-interval=5s --health-timeout=5s --health-retries=30
+    
     steps:
       - uses: actions/checkout@v4
 
@@ -78,8 +77,7 @@ jobs:
       - name: Run tests (unit first, then integration)
         env:
           FIREBASE_CRED_PATH: ${{ env.FIREBASE_CRED_PATH }}
-          # IMPORTANT: Use localhost here because the service is bound to the runner network
-          MONGO_DSN: mongodb://localhost:27017/fastapi_db
+          MONGO_DSN: ${{ secrets.MONGODB_KEY }}
         run: |
           pytest -q tests/unit --maxfail=1
           pytest -q tests/integration --maxfail=1
