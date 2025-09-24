@@ -2,11 +2,12 @@ import pytest
 from datetime import datetime
 from app.models.api.user import UserRegisterReq, UserRegisterRes
 from app.models.embedded.enums import UserRole
-from utils import *
+from tests.integration.utils import *
+
+pytestmark = pytest.mark.asyncio
 
 
-@pytest.mark.anyio
-async def test_user_register_default(init_firebase, firebase_log_in, init_db):
+async def test_user_register_default(init_firebase, firebase_log_in, init_db, clean_db):
     payload = {
         "display_name": "Test User"
     }
