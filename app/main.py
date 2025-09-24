@@ -17,7 +17,7 @@ async def lifespan(app: FastAPI):
 
     # Mongo / Beanie
     db_client = AsyncIOMotorClient(settings.MONGO_DSN)
-    db = db_client.get_default_database()
+    db = db_client.get_database(settings.DB_NAME)
     await init_beanie(database=db, document_models=[UserDocument])
     app.state.mongo_client = db_client
     app.state.db = db
