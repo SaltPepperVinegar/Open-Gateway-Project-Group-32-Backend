@@ -27,3 +27,8 @@ class GeoJSONPolygon(BaseModel):
                         "Each position must be a [lng, lat] coordinate pair"
                     )
         return coords
+
+
+class GeoJSONPoint(BaseModel):
+    type: Literal["Point"] = Field("Point", description="type must be 'Point'")
+    coordinates: List[float]

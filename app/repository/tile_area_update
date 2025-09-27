@@ -1,0 +1,30 @@
+from app.models.db.tile_area import TilingAreaDoc
+from app.models.DTO.tile import TileAreaUpdateDTO
+from app.repository.tiling_job_runner import create_tiling_job
+
+
+async def update_tile_area(update: TileAreaUpdateDTO) -> TilingAreaDoc:
+
+    doc = await (
+        TilingAreaDoc.find({"area_id": update.area_id})
+        .sort("-tiling_version")                
+        .first_or_none()
+    )
+    if doc is None:
+        area = TilingAreaDoc(
+            area_id=update.area_id,
+            tiling_version=0,
+            spacing_m=update.spacing_m,
+            area=update.area,
+        )
+    else:
+        area = TilingAreaDoc(
+            area_id=update.area_id,
+            tiling_version=doc.tiling_version + 1,
+            spacing_m=update.spacing_m,
+            area=update.area,
+        )
+
+    await area.insert()
+
+    return area

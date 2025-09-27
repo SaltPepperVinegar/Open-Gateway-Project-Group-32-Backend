@@ -10,9 +10,12 @@ from motor.motor_asyncio import AsyncIOMotorClient
 
 from app.api.v1.users import router as users_router
 from app.core.config import settings
+from app.models.db.tile import TileDoc
+from app.models.db.tile_area import TilingAreaDoc
+from app.models.db.tiling_job import TilingJobDoc
 from app.models.db.user import UserDocument
 
-DB_DOCUMENT_MODELS = [UserDocument]
+DB_DOCUMENT_MODELS = [UserDocument, TileDoc, TilingJobDoc, TilingAreaDoc]
 
 
 @asynccontextmanager

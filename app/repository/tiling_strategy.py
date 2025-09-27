@@ -52,7 +52,7 @@ def _bbox(ring: List[List[float]]) -> Tuple[float, float, float, float]:
 # ----------------- tiling -----------------
 
 
-def build_tiles(
+def tile_strategy_square_centre(
     polygon_rings: List[List[List[float]]],
     spacing_m: float = 200,
     max_tiles: Optional[int] = None,
@@ -95,6 +95,7 @@ def build_tiles(
                     [round(x1, 7), round(y1, 7)],  # close the ring
                 ]
                 tiles.append(boundary)
+
                 if max_tiles is not None and len(tiles) >= max_tiles:
                     return tiles
             lng += dlon
@@ -166,7 +167,7 @@ if __name__ == "__main__":
     ]
     spacing = 100
 
-    tiles = build_tiles(polygon, spacing_m=spacing)
+    tiles = tile_strategy_square_centre(polygon, spacing_m=spacing)
     print(f"Generated {len(tiles)} tiles.")
     # Visualize (set save_path="tiles.png" to export)
     visualize_tiles(
