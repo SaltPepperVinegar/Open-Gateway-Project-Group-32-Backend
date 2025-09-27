@@ -13,6 +13,6 @@ async def update_tile_area_service_test(update: TileAreaUpdateDTO):
 
     area = await update_tile_area(update)
 
-    job = await create_tiling_job(area)
+    job = await create_tiling_job(area, priority=1)
 
     return job
