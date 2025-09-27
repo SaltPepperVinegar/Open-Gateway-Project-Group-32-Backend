@@ -1,6 +1,11 @@
+from typing import Dict, Any
+import json
+
 from httpx import ASGITransport, AsyncClient
+import httpx
 
 from app.main import app
+from app.core.config import settings
 
 
 async def api_post(path, json_data, token=None):
@@ -51,3 +56,30 @@ async def api_delete(path, token=None):
     ) as ac:
         response = await ac.delete(path, headers=headers)
     return response
+
+
+def firebase_log_in_manually(
+        email: str, password: str
+) -> Dict[str, Any]:
+    url = (
+        "https://identitytoolkit.googleapis.com/v1/"
+        f"accounts:signInWithPassword?key={
+            json.loads(settings.FIREBASE_FRONTEND_CRED)['apiKey']
+        }"
+    )
+
+    payload = {
+        "email": email,
+        "password": password,
+        "returnSecureToken": True,
+    }
+
+    with httpx.Client() as client:
+        r = client.post(url, json=payload)
+
+    if r.status_code != 200:
+        raise Exception(r.status_code, r.json().get("error", {}))
+
+    data = r.json()
+
+    return {"uid": data["localId"], "token": data["idToken"]}
