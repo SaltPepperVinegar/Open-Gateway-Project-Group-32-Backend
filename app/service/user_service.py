@@ -6,7 +6,7 @@ from app.core.config import settings
 from app.models.api.user import UserRegisterReq, UserRegisterRes
 from app.models.DTO.user import UserCreateDTO
 from app.models.embedded.enums import UserRole
-from app.repository.users_repo import create_user
+from app.repository.user_repo import create_user
 
 
 async def register_user_service(

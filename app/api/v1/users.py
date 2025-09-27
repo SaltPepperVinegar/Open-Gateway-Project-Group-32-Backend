@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 
 from app.api.v1.users_depends import get_decoded_token
 from app.models.api.user import UserRegisterReq, UserRegisterRes
-from app.service.users_service import register_user_service
+from app.service.user_service import register_user_service
 
 router = APIRouter(prefix="/users", tags=["users"])
 
