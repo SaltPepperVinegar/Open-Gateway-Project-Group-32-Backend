@@ -27,7 +27,13 @@ async def init_db():
 
 @pytest.fixture(scope="function")
 async def clean_db(init_db):
-    pass
+    for model in DB_DOCUMENT_MODELS:
+        await model.get_pymongo_collection().delete_many({})
+
+    yield
+
+    for model in DB_DOCUMENT_MODELS:
+        await model.get_pymongo_collection().delete_many({})
 
 
 @pytest.fixture(scope="function")

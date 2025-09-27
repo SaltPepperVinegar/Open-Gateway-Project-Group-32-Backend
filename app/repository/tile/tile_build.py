@@ -6,7 +6,7 @@ from app.models.db.tile import TileDoc
 from app.models.db.tile_area import TilingAreaDoc
 from app.models.db.tiling_job import TilingJobDoc
 from app.models.general.geo_json import GeoJSONPoint, GeoJSONPolygon
-from app.repository.tiling_strategy import tile_strategy_square_centre
+from app.repository.tile.tiling_strategy import tile_strategy_square_centre
 
 
 def hash_tile(area_id: str, tiling_version: int, boundary: List[List[float]]) -> str:
@@ -36,9 +36,6 @@ async def build_tiles_and_store(area: TilingAreaDoc, job: TilingJobDoc) -> int:
         )
         bulk.append(doc)
 
-    inserted = 0
-    for doc in bulk:
-        await doc.insert()
-        inserted += 1
+    await TileDoc.insert_many(bulk)
 
-    return inserted
+    return len(bulk)

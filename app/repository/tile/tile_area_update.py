@@ -1,13 +1,14 @@
+from datetime import datetime, timezone
+
 from app.models.db.tile_area import TilingAreaDoc
 from app.models.DTO.tile import TileAreaUpdateDTO
-from app.repository.tiling_job_runner import create_tiling_job
 
 
 async def update_tile_area(update: TileAreaUpdateDTO) -> TilingAreaDoc:
 
     doc = await (
         TilingAreaDoc.find({"area_id": update.area_id})
-        .sort("-tiling_version")                
+        .sort("-tiling_version")
         .first_or_none()
     )
     if doc is None:
@@ -24,6 +25,17 @@ async def update_tile_area(update: TileAreaUpdateDTO) -> TilingAreaDoc:
             spacing_m=update.spacing_m,
             area=update.area,
         )
+
+    await TilingAreaDoc.find(
+        {"area_id": update.area_id, "status": {"$eq": "active"}}
+    ).update_many(
+        {
+            "$set": {
+                "status": "stale",
+                "updated_at": datetime.now(timezone.utc),
+            }
+        }
+    )
 
     await area.insert()
 

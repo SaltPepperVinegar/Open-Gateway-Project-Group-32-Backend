@@ -22,9 +22,10 @@ class TileDoc(Document):
     center: GeoJSONPoint
 
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
-    population: int | None = None
-    population_updated_at: datetime = Field(
+    metrics: int | None = None
+    metrics_updated_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc)
     )
 

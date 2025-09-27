@@ -1,5 +1,6 @@
+import asyncio
 import json
-from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager, suppress
 from typing import cast
 
 import firebase_admin
@@ -8,12 +9,14 @@ from fastapi import FastAPI
 from firebase_admin import credentials, get_app
 from motor.motor_asyncio import AsyncIOMotorClient
 
+from app.api.v1.tile_area_update_service_test import router as tiles_router
 from app.api.v1.users import router as users_router
 from app.core.config import settings
 from app.models.db.tile import TileDoc
 from app.models.db.tile_area import TilingAreaDoc
 from app.models.db.tiling_job import TilingJobDoc
 from app.models.db.user import UserDocument
+from app.repository.tile.tile_queue import worker_loop
 
 DB_DOCUMENT_MODELS = [UserDocument, TileDoc, TilingJobDoc, TilingAreaDoc]
 
@@ -38,10 +41,20 @@ async def lifespan(app: FastAPI):
         fb_app = firebase_admin.initialize_app(cred)
     app.state.firebase_app = fb_app
 
+    jobs_coll = app.state.db.get_collection("tiling_jobs")
+    app.state.jobs_coll = jobs_coll
+
+    tile_queue = asyncio.create_task(
+        worker_loop(poll_interval_s=2.0, batch_size=200, tile_concurrency=10)
+    )
+    app.state.worker_task = tile_queue
+
     try:
         yield
     finally:
-        # --- Shutdown ---
+        tile_queue.cancel()
+        with suppress(asyncio.CancelledError):
+            await tile_queue
         db_client.close()
 
 
@@ -49,6 +62,7 @@ app = FastAPI(title=settings.APP_NAME, lifespan=lifespan)
 
 # Routers
 app.include_router(users_router, prefix="/api/v1")
+app.include_router(tiles_router, prefix="/api/v1")
 
 
 # Health checks
@@ -56,3 +70,7 @@ app.include_router(users_router, prefix="/api/v1")
 @app.get("/health", include_in_schema=False, tags=["health"])
 async def health():
     return {"status": "ok"}
+
+
+for r in app.routes:
+    print(getattr(r, "path", None), getattr(r, "methods", None))
