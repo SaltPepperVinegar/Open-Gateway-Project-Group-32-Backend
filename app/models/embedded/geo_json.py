@@ -20,28 +20,32 @@ class GeoJSONPolygon(BaseModel):
     def validate_coordinates(cls, coords):
         if not coords or not isinstance(coords, list):
             raise ValueError("Polygon must have one linear ring")
-        
+
         if len(coords) > 1:
             raise ValueError("Polygon must have exactly one ring.")
-        
+
         ring = coords[0]
 
         if len(ring) < 4:
-                raise ValueError("Each linear ring must have at least 4 positions")
-        
+            raise ValueError("Each linear ring must have at least 4 positions")
+
         if ring[0] != ring[-1]:
-            raise ValueError("Linear ring must be closed (first and last positions must match)")
-        
+            raise ValueError(
+                "Linear ring must be closed (first and last positions must match)"
+            )
+
         for point in ring:
             if len(point) != 2:
                 raise ValueError("Each position must be a [lng, lat] coordinate pair")
-            
+
         return coords
 
 
 class GeoJSONLineString(BaseModel):
     gid: str
-    type: Literal["LineString"] = Field("LineString", description="type must be 'LineString'")
+    type: Literal["LineString"] = Field(
+        "LineString", description="type must be 'LineString'"
+    )
     coordinates: List[List[float]] = Field(
         ..., description="Array of points, each a [lng, lat] point"
     )
@@ -50,10 +54,10 @@ class GeoJSONLineString(BaseModel):
     def validate_coordinates(cls, coords):
         if not coords or not isinstance(coords, list):
             raise ValueError("Line string must have a list of points")
-        
+
         if len(coords) < 2:
             raise ValueError("Line string must have at least two points")
-        
+
         for point in coords:
             if len(point) != 2:
                 raise ValueError("Each position must be a [lng, lat] coordinate pair")

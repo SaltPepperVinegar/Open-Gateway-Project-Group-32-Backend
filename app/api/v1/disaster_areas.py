@@ -3,7 +3,7 @@ from typing import Annotated, Any, Dict
 from fastapi import APIRouter, Depends
 
 from app.api.v1.users_depends import get_decoded_token
-from app.models.api.disaster_area import DisasterAreaCreateRes, DisasterAreaCreateReq
+from app.models.api.disaster_area import DisasterAreaCreateReq, DisasterAreaCreateRes
 from app.service.disaster_area_service import create_disaster_area_service
 
 router = APIRouter(prefix="/disaster_areas", tags=["disaster_areas"])

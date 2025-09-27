@@ -8,11 +8,11 @@ from fastapi import FastAPI
 from firebase_admin import credentials, get_app
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from app.api.v1.users import router as users_router
 from app.api.v1.disaster_areas import router as disaster_areas_router
+from app.api.v1.users import router as users_router
 from app.core.config import settings
-from app.models.db.user import UserDocument
 from app.models.db.disaster_area import DisasterAreaDocument
+from app.models.db.user import UserDocument
 
 DB_DOCUMENT_MODELS = [UserDocument, DisasterAreaDocument]
 

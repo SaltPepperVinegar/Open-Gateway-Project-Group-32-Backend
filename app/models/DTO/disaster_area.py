@@ -1,10 +1,15 @@
-from typing import Optional
 from datetime import datetime, timezone
+from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
-from app.models.embedded.geo_json import *
 from app.models.embedded.enums import DisasterAreaStatus
+from app.models.embedded.geo_json import (
+    GeoJSONLineString,
+    GeoJSONPoint,
+    GeoJSONPolygon,
+)
+
 
 class DisasterAreaCreateDTO(BaseModel):
     creator_uid: str

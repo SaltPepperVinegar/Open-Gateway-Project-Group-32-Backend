@@ -1,11 +1,11 @@
-from typing import Dict, Any
 import json
+from typing import Any, Dict
 
-from httpx import ASGITransport, AsyncClient
 import httpx
+from httpx import ASGITransport, AsyncClient
 
-from app.main import app
 from app.core.config import settings
+from app.main import app
 
 
 async def api_post(path, json_data, token=None):
@@ -58,9 +58,7 @@ async def api_delete(path, token=None):
     return response
 
 
-def firebase_log_in_manually(
-        email: str, password: str
-) -> Dict[str, Any]:
+def firebase_log_in_manually(email: str, password: str) -> Dict[str, Any]:
     url = (
         "https://identitytoolkit.googleapis.com/v1/"
         f"accounts:signInWithPassword?key={
