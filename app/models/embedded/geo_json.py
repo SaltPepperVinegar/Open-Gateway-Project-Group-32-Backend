@@ -39,7 +39,32 @@ class GeoJSONPolygon(BaseModel):
         return coords
 
 
+class GeoJSONLineString(BaseModel):
+    gid: str
+    type: Literal["LineString"] = Field("LineString", description="type must be 'LineString'")
+    coordinates: List[List[float]] = Field(
+        ..., description="Array of points, each a [lng, lat] point"
+    )
+
+    @field_validator("coordinates")
+    def validate_coordinates(cls, coords):
+        if not coords or not isinstance(coords, list):
+            raise ValueError("Line string must have a list of points")
+        
+        if len(coords) < 2:
+            raise ValueError("Line string must have at least two points")
+        
+        for point in coords:
+            if len(point) != 2:
+                raise ValueError("Each position must be a [lng, lat] coordinate pair")
+
+
 class GeoJSONPoint(BaseModel):
     gid: Optional[str] = None
     type: Literal["Point"] = Field("Point", description="type must be 'Point'")
     coordinates: List[float]
+
+    @field_validator("coordinates")
+    def validate_coordinates(cls, coords):
+        if len(coords) != 2:
+            raise ValueError("A point must be a [lng, lat] coordinate pair")
