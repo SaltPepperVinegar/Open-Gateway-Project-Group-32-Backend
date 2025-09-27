@@ -9,7 +9,7 @@ from tests.integration.utils import api_post
 pytestmark = pytest.mark.asyncio
 
 
-async def test_user_register_default(init_firebase, firebase_log_in, init_db, clean_db):
+async def test_user_register_default(init_db, clean_db, init_firebase, firebase_log_in):
     payload = {"display_name": "Test User"}
 
     resp = await api_post("/api/v1/users", payload, firebase_log_in["token"])
