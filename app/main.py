@@ -11,6 +11,7 @@ from firebase_admin import credentials, get_app
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from app.api.v1.disaster_areas import router as disaster_areas_router
+from app.api.v1.retrieve_population_data import router as population_router
 from app.api.v1.tile_area_update_service_test import router as tiles_router
 from app.api.v1.users import router as users_router
 from app.core.config import settings
@@ -83,6 +84,7 @@ app = FastAPI(title=settings.APP_NAME, lifespan=lifespan)
 app.include_router(users_router, prefix="/api/v1")
 app.include_router(tiles_router, prefix="/api/v1")
 app.include_router(disaster_areas_router, prefix="/api/v1")
+app.include_router(population_router, prefix="/api/v1")
 
 
 # Health checks

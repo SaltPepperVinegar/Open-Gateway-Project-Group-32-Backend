@@ -29,7 +29,7 @@ class TilingAreaDoc(Document):
             next_at += interval
         self.next_update_at = next_at
 
-    status: Literal["active", "stale", "stop"] = "active"
+    status: Literal["active", "stale", "pause"] = "active"
 
     class Settings:
         name = "tiling_areas"
