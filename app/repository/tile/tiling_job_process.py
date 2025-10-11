@@ -18,7 +18,7 @@ async def process_tile_job(
 ):
     print(
         f"processing tile job {job.area_id}, version: {job.tiling_version},"
-        + f"epoch: {job.tiling_epoch}"
+        + "epoch: {job.tiling_epoch}"
     )
     try:
         job.status = "running"

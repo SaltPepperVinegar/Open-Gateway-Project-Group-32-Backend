@@ -6,6 +6,8 @@ from app.repository.tile.tile_build import build_tiles_and_store
 
 
 async def create_tiling_job(area: TilingAreaDoc, priority=0) -> TilingJobDoc:
+    area.schedule_next_update()
+    await area.save()
 
     job = TilingJobDoc(
         area_id=area.area_id,
