@@ -1,6 +1,7 @@
 import asyncio
 import json
 from contextlib import asynccontextmanager, suppress
+from datetime import timezone
 from typing import cast
 
 import firebase_admin
@@ -18,7 +19,8 @@ from app.models.db.tile import TileDoc
 from app.models.db.tile_area import TilingAreaDoc
 from app.models.db.tiling_job import TilingJobDoc
 from app.models.db.user import UserDocument
-from app.repository.tile.tile_queue import worker_loop
+from app.repository.tile.tile_queue import tile_queue_loop
+from app.repository.tile_update.tile_update import tile_area_update_loop
 
 DB_DOCUMENT_MODELS = [
     UserDocument,
@@ -34,7 +36,9 @@ async def lifespan(app: FastAPI):
     # --- Startup ---
 
     # Mongo / Beanie
-    db_client = AsyncIOMotorClient(settings.MONGO_DSN)
+    db_client = AsyncIOMotorClient(
+        settings.MONGO_DSN, tz_aware=True, tzinfo=timezone.utc
+    )
     db = db_client.get_database(settings.DB_NAME)
     await init_beanie(database=db, document_models=DB_DOCUMENT_MODELS)
     app.state.mongo_client = db_client
@@ -53,8 +57,11 @@ async def lifespan(app: FastAPI):
     app.state.jobs_coll = jobs_coll
 
     tile_queue = asyncio.create_task(
-        worker_loop(poll_interval_s=2.0, batch_size=200, tile_concurrency=10)
+        tile_queue_loop(poll_interval_s=2.0, batch_size=200, tile_concurrency=10)
     )
+
+    tile_update = asyncio.create_task(tile_area_update_loop(poll_interval_s=2.0))
+
     app.state.worker_task = tile_queue
 
     try:
@@ -63,6 +70,10 @@ async def lifespan(app: FastAPI):
         tile_queue.cancel()
         with suppress(asyncio.CancelledError):
             await tile_queue
+        tile_update.cancel()
+        with suppress(asyncio.CancelledError):
+            await tile_update
+
         db_client.close()
 
 

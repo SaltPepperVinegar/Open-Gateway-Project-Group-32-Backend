@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import asyncio
-from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from typing import Any, Dict, Optional
 
@@ -13,7 +12,7 @@ from app.models.db.tiling_job import TilingJobDoc
 from app.repository.tile.tile_batch_update import process_tile_job
 
 
-async def worker_loop(
+async def tile_queue_loop(
     *,
     poll_interval_s: float = 2.0,
     batch_size: int = 200,
@@ -44,9 +43,6 @@ async def worker_loop(
             await _mark_failed(job.id, f"Unhandled worker error: {e!r}")
 
 
-# ---------- Atomic claim / Heartbeat / Status helpers ----------
-
-
 async def _claim_next_job() -> Optional[TilingJobDoc]:
     """
     Atomically claim the highest priority queued job (FIFO within same priority).
@@ -75,7 +71,6 @@ def _now() -> datetime:
 
 
 def _jobs_coll() -> Any:
-    # Beanie 2.x returns PyMongo async collection
     return TilingJobDoc.get_pymongo_collection()
 
 
@@ -155,17 +150,6 @@ async def _mark_canceled(job_id: PydanticObjectId, note: str = "") -> None:
 
 
 # ---------- Utilities ----------
-
-
-@asynccontextmanager
-async def contextlib_suppress(*exceptions):
-    """
-    Minimal async-friendly suppressor (since contextlib.suppress is sync-only in 3.11).
-    """
-    try:
-        yield
-    except exceptions:
-        return
 
 
 async def cancel_job(job_id: PydanticObjectId) -> bool:

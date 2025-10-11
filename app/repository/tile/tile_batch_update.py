@@ -16,7 +16,10 @@ async def process_tile_job(
     tile_concurrency=10,
     heartbeat_s=10,
 ):
-    print(f"processing {job.area_id}, {job.tiling_version}, {job.tiling_epoch}")
+    print(
+        f"processing tile job {job.area_id}, version: {job.tiling_version},"
+        + f"epoch: {job.tiling_epoch}"
+    )
     try:
         job.status = "running"
         await job.save()

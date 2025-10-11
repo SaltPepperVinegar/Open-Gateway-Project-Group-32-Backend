@@ -13,6 +13,9 @@ async def create_tiling_job(area: TilingAreaDoc, priority=0) -> TilingJobDoc:
         tiling_epoch=datetime.now(timezone.utc),
         priority=priority,
     )
+    print(
+        f"creating tile job {job.area_id}, version: {job.tiling_version}, epoch: {job.tiling_epoch}"
+    )
 
     inserted = await build_tiles_and_store(area, job)
     job.total_tiles = inserted

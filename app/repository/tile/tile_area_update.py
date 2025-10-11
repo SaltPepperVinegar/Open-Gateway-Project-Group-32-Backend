@@ -16,6 +16,7 @@ async def update_tile_area(update: TileAreaUpdateDTO) -> TilingAreaDoc:
             area_id=update.area_id,
             tiling_version=0,
             spacing_m=update.spacing_m,
+            update_interval_seconds=update.update_interval_seconds,
             area=update.area,
         )
     else:
@@ -23,6 +24,7 @@ async def update_tile_area(update: TileAreaUpdateDTO) -> TilingAreaDoc:
             area_id=update.area_id,
             tiling_version=doc.tiling_version + 1,
             spacing_m=update.spacing_m,
+            update_interval_seconds=update.update_interval_seconds,
             area=update.area,
         )
 
@@ -36,7 +38,9 @@ async def update_tile_area(update: TileAreaUpdateDTO) -> TilingAreaDoc:
             }
         }
     )
+    print(f"update tile area {area.area_id}, version: {area.tiling_version}")
 
     await area.insert()
+    area.schedule_next_update()
 
     return area
