@@ -10,4 +10,4 @@ async def update_tile_area_service(update: TileAreaUpdateDTO):
 
 
 async def remove_tile_area(remove: TileAreaRemoveDTO):
-    tile_area_set_inactive(remove)
+    await tile_area_set_inactive(remove)
