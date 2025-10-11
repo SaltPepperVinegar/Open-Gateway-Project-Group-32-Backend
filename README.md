@@ -204,4 +204,7 @@ Deployment Method: Google Cloud Build (GitHub hook) → Cloud Run
 
 - secrets managed by **Google Cloud secret manager**
 
+SERVICE_URL=https://open-gateway-project-group-32-backend-758384409722.australia-southeast2.run.app
+gcloud auth print-identity-token --audiences="${SERVICE_URL}"
+=======
 - **MongoDB IP** filter (in future)
