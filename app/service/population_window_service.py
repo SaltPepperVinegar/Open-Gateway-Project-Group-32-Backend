@@ -74,7 +74,7 @@ async def retrieve_population_data(req: PopulationWindowIn):
     ]
 
     results = await tiles_col.aggregate(pipeline_tiles).to_list(length=None)
-    print(len(results))
+    print("number of result returned:", len(results))
     return [
         AreaPopulationOut(area=r["boundary"], population=float(r["metrics"]))
         for r in results
