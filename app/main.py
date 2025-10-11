@@ -19,7 +19,7 @@ from app.models.db.tile import TileDoc
 from app.models.db.tile_area import TilingAreaDoc
 from app.models.db.tiling_job import TilingJobDoc
 from app.models.db.user import UserDocument
-from app.repository.tile.tile_queue import tile_queue_loop
+from app.service.tile_job_queue_service import tile_queue_loop
 from app.service.tile_job_timer_service import tile_area_update_loop
 
 DB_DOCUMENT_MODELS = [
