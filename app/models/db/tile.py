@@ -3,6 +3,7 @@ from typing import Annotated, Literal
 
 from beanie import Document, Indexed, PydanticObjectId
 from pydantic import Field
+from pymongo import ASCENDING, DESCENDING, GEOSPHERE, IndexModel
 
 from app.models.general.geo_json import GeoJSONPoint, GeoJSONPolygon
 
@@ -33,3 +34,17 @@ class TileDoc(Document):
 
     class Settings:
         name = "tiles"
+        indexes = [
+            IndexModel([("tile_key", ASCENDING)]),
+            # speed area filtering and latest-sort (pairs with your queries)
+            IndexModel(
+                [
+                    ("area_id", ASCENDING),
+                    ("tiling_version", DESCENDING),
+                    ("tiling_epoch", DESCENDING),
+                ],
+            ),
+            # geo indexes
+            IndexModel([("boundary", GEOSPHERE)]),
+            IndexModel([("center", GEOSPHERE)]),
+        ]
