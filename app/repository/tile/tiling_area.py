@@ -4,7 +4,8 @@ from typing import Optional
 from pymongo import ReturnDocument
 
 from app.models.db.tile_area import TilingAreaDoc
-from app.models.DTO.tile import TileAreaUpdateDTO
+from app.models.db.tiling_job import TilingJobDoc
+from app.models.DTO.tile import TileAreaRemoveDTO, TileAreaUpdateDTO
 
 
 async def update_tile_area(update: TileAreaUpdateDTO) -> TilingAreaDoc:
@@ -71,3 +72,28 @@ async def claim_one_area_need_location_update(
     if not claimed_raw:
         return None
     return TilingAreaDoc.model_validate(claimed_raw)
+
+
+async def tile_area_set_inactive(update: TileAreaRemoveDTO):
+
+    await TilingAreaDoc.find(
+        {"area_id": update.area_id, "status": {"$eq": "active"}}
+    ).update_many(
+        {
+            "$set": {
+                "status": "stale",
+                "updated_at": datetime.now(timezone.utc),
+            }
+        }
+    )
+
+    await TilingJobDoc.find(
+        {"area_id": update.area_id, "status": {"$eq": "queued"}}
+    ).update_many(
+        {
+            "$set": {
+                "status": "canceled",
+                "updated_at": datetime.now(timezone.utc),
+            }
+        }
+    )
