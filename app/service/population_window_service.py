@@ -1,6 +1,4 @@
-from typing import Any, Dict, List
-
-from app.models.api.population_data import AreaPopulationOut, PopulationWindowIn
+from app.models.api.population_data import PopulationWindowIn
 from app.models.db.tile_area import TilingAreaDoc
 
 
@@ -62,10 +60,8 @@ async def retrieve_population_data(req: PopulationWindowIn):
         }
         for job in latest_jobs
     ]
-
-    # 4) Geo filter with bbox
-    bbox_polygon = bbox_to_polygon(req.bbox)
-    geo_filter = {"boundary": {"$geoIntersects": {"$geometry": bbox_polygon}}}
+    geometry = {"type": "Polygon", "coordinates": req.area.coordinates}
+    geo_filter = {"boundary": {"$geoIntersects": {"$geometry": geometry}}}
 
     # 5) Aggregate tiles: match + group by area to compute average density
     tiles_col = db.get_collection("tiles")
@@ -76,24 +72,10 @@ async def retrieve_population_data(req: PopulationWindowIn):
     results = await tiles_col.aggregate(pipeline_tiles).to_list(length=None)
     print("number of result returned:", len(results))
     return [
-        AreaPopulationOut(area=r["boundary"], population=float(r["metrics"]))
+        [
+            r["center"]["coordinates"][0],
+            r["center"]["coordinates"][1],
+            float(r["metrics"]),
+        ]
         for r in results
     ]
-
-
-def bbox_to_polygon(bbox: List[float]) -> Dict[str, Any]:
-    min_lon, min_lat, max_lon, max_lat = bbox
-    if not (min_lon <= max_lon and min_lat <= max_lat):
-        raise ValueError("Invalid bbox: ensure min < max for both lon/lat")
-    return {
-        "type": "Polygon",
-        "coordinates": [
-            [
-                [min_lon, min_lat],
-                [max_lon, min_lat],
-                [max_lon, max_lat],
-                [min_lon, max_lat],
-                [min_lon, min_lat],
-            ]
-        ],
-    }
