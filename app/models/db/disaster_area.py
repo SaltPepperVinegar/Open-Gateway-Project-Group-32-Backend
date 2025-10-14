@@ -1,11 +1,11 @@
 from datetime import datetime
-from typing import Annotated, List, Optional
+from typing import Annotated, Optional
 
 import pymongo
 from beanie import Document, Indexed
 
 from app.models.embedded.enums import DisasterAreaStatus
-from app.models.embedded.geo_json import GeoJSONLineString, GeoJSONPoint, GeoJSONPolygon
+from app.models.embedded.geo_json import GeoJSONPolygon
 
 
 class DisasterAreaDocument(Document):
@@ -13,7 +13,6 @@ class DisasterAreaDocument(Document):
     title: str
     description: str
     boundary: Annotated[GeoJSONPolygon, Indexed(index_type=pymongo.GEOSPHERE)]
-    marks: List[GeoJSONPolygon | GeoJSONLineString | GeoJSONPoint]
     status: DisasterAreaStatus
     created_at: datetime
     updated_at: datetime

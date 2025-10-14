@@ -49,7 +49,6 @@ async def test_manager_create_disaster_area(
     assert resp.title == payload["title"]
     assert resp.description == payload["description"]
     assert resp.boundary == GeoJSONPolygon(**payload["boundary"])
-    assert resp.marks == []
     assert resp.status == DisasterAreaStatus.ACTIVE
     assert resp.resolved_at is None
 

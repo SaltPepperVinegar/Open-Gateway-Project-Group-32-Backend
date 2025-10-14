@@ -1,14 +1,10 @@
 from datetime import datetime, timezone
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import BaseModel, Field
 
 from app.models.embedded.enums import DisasterAreaStatus
-from app.models.embedded.geo_json import (
-    GeoJSONLineString,
-    GeoJSONPoint,
-    GeoJSONPolygon,
-)
+from app.models.embedded.geo_json import GeoJSONPolygon
 
 
 class DisasterAreaCreateDTO(BaseModel):
@@ -16,7 +12,6 @@ class DisasterAreaCreateDTO(BaseModel):
     title: str
     description: str
     boundary: GeoJSONPolygon
-    marks: List[GeoJSONPolygon | GeoJSONLineString | GeoJSONPoint] = []
     status: DisasterAreaStatus = DisasterAreaStatus.ACTIVE
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))

@@ -1,12 +1,10 @@
 from datetime import datetime
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import BaseModel
 
 from app.models.embedded.enums import DisasterAreaStatus
 from app.models.embedded.geo_json import (
-    GeoJSONLineString,
-    GeoJSONPoint,
     GeoJSONPolygon,
 )
 
@@ -22,7 +20,6 @@ class DisasterAreaCreateRes(BaseModel):
     title: str
     description: str
     boundary: GeoJSONPolygon
-    marks: List[GeoJSONPolygon | GeoJSONLineString | GeoJSONPoint]
     status: DisasterAreaStatus
     created_at: datetime
     updated_at: datetime
