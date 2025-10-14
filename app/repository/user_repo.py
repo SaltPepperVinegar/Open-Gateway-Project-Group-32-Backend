@@ -1,6 +1,6 @@
-from fastapi import HTTPException
 from pymongo.errors import DuplicateKeyError
 
+from app.exceptions.user import UserAlreadyRegisteredError
 from app.models.db.user import UserDocument
 from app.models.DTO.user import UserCreateDTO
 
@@ -11,6 +11,6 @@ async def create_user(user: UserCreateDTO) -> UserCreateDTO:
     try:
         await user_doc.insert()
     except DuplicateKeyError as err:
-        raise HTTPException(status_code=400, detail="uid already exists") from err
+        raise UserAlreadyRegisteredError() from err
 
     return user
