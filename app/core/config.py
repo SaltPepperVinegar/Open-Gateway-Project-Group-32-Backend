@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     DB_NAME: str = "opgw"
     DB_NAME_TEST: str = "opgw_test"
 
-    MANAGER_EMAILS: List[str] = ["manager_1@email.com", "manager_2@email.com"]
+    MANAGER_EMAILS: List[str] = ["zijie@test.com"]
 
     # Terms will be loaded from .env or os.environ:
     MONGO_DSN: Optional[str] = None

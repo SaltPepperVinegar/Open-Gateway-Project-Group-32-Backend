@@ -16,3 +16,7 @@ class UserRegisterRes(BaseModel):
     role: UserRole
     created_at: datetime
     updated_at: datetime
+
+
+class VerifyTokenRes(BaseModel):
+    is_valid: bool
