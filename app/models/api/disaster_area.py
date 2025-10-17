@@ -24,3 +24,14 @@ class DisasterAreaCreateRes(BaseModel):
     created_at: datetime
     updated_at: datetime
     resolved_at: Optional[datetime] = None
+
+
+class DisasterAreaSearchReq(BaseModel):
+    title: Optional[datetime]
+    description: Optional[datetime]
+    boundary: Optional[datetime]
+
+
+class DisasterAreaSearchRes(BaseModel):
+    area_id: str
+    boundary: GeoJSONPolygon
