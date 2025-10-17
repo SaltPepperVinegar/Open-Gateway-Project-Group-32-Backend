@@ -38,26 +38,6 @@ class UserCreateDTO(BaseModel):
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
-class UserIdentityDTO(BaseModel):
-    """
-    Encapsulates the fields used to uniquely identify a user.
-    Exactly one of these fields must be provided when creating an instance.
-    A typical use case is retrieving information associated with a user based on their unique UID.
-    """
-
-    uid: Optional[str] = None
-    email: Optional[EmailStr] = None
-
-    @model_validator(mode="after")
-    def check_exactly_one_not_none(self) -> Self:
-        not_none_field_count = len([v for v in self.model_dump().values() if v is not None])
-
-        if not_none_field_count != 1:
-            raise ValueError("Must provide exactly ONE user identifying field.")
-
-        return self
-
-
 class UserSearchFilterDTO(BaseModel):
     """
     Encapsulates the fields used to specify search filter
@@ -68,8 +48,11 @@ class UserSearchFilterDTO(BaseModel):
     e.g. Get associated information of all "worker" users.
     """
 
-    role: Optional[UserRole] = None
+    uid: Optional[str] = None
     display_name: Optional[str] = None
+    email: Optional[EmailStr] = None
+    role: Optional[UserRole] = None
+    
 
     @model_validator(mode="after")
     def check_not_all_none(self) -> Self:

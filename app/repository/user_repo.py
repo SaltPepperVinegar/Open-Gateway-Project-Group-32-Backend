@@ -1,10 +1,11 @@
 from typing import Optional, List
 
 from pymongo.errors import DuplicateKeyError
+from pymongo import DESCENDING
 
 from app.exceptions.user import UserAlreadyRegisteredError
 from app.models.db.user import UserDocument
-from app.models.DTO.user import UserCreateDTO, UserIdentityDTO, UserDTO, UserSearchFilterDTO
+from app.models.DTO.user import UserCreateDTO, UserDTO, UserSearchFilterDTO
 
 
 async def create_user(user: UserCreateDTO) -> UserCreateDTO:
@@ -23,14 +24,14 @@ async def create_user(user: UserCreateDTO) -> UserCreateDTO:
     return user
 
 
-async def find_one_user(user_identity: UserIdentityDTO) -> Optional[UserDTO]:
+async def find_one_user(user_search_filter: UserSearchFilterDTO) -> Optional[UserDTO]:
     """
     Find associated data of a user according to specified user identity.
     Identity could be UID, email or other non-duplicated field.
     Return None when no user is found.
     """
 
-    target = await UserDocument.find_one(user_identity.model_dump(exclude_none=True))
+    target = await UserDocument.find_one(user_search_filter.model_dump(exclude_none=True))
 
     return None if target is None else UserDTO(**target.model_dump())
 
@@ -64,8 +65,10 @@ async def find_users(
 
     # Results are sorted according to update time in descending order
     search_query = search_query \
-        .sort(-UserDocument.updated_at) \
+        .sort([UserDocument.updated_at, DESCENDING]) \
         .skip(page_size * page_number) \
         .limit(page_size)
+    
+    user_documents = await search_query.to_list()
 
-    return await search_query.to_list()
+    return [UserDTO(**user_document.model_dump()) for user_document in user_documents]
