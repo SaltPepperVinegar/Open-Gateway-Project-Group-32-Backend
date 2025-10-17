@@ -41,19 +41,22 @@ class UserCreateDTO(BaseModel):
 class UserIdentityDTO(BaseModel):
     """
     Encapsulates the fields used to uniquely identify a user.
-    At least one of these fields must be provided when creating an instance.
+    Exactly one of these fields must be provided when creating an instance.
     A typical use case is retrieving information associated with a user based on their unique UID.
     """
 
     uid: Optional[str] = None
     email: Optional[EmailStr] = None
 
-    @model_validator(mode='after')
-    def check_not_all_none(self) -> Self:
-        if self.uid is None and self.email is None:
-            raise ValueError("Must provide at least one user identity field.")
+    @model_validator(mode="after")
+    def check_exactly_one_not_none(self) -> Self:
+        not_none_field_count = len([v for v in self.model_dump().values() if v is not None])
+
+        if not_none_field_count != 1:
+            raise ValueError("Must provide exactly ONE user identifying field.")
+
         return self
-    
+
 
 class UserSearchFilterDTO(BaseModel):
     """
@@ -68,9 +71,14 @@ class UserSearchFilterDTO(BaseModel):
     role: Optional[UserRole] = None
     display_name: Optional[str] = None
 
-    @model_validator(mode='after')
+    @model_validator(mode="after")
     def check_not_all_none(self) -> Self:
-        if self.role is None and self.display_name is None:
-            raise ValueError("Must provide at least one user identity field.")
+        model_dict = self.model_dump()
+
+        none_field_count = len([v for v in model_dict.values() if v is None])
+        field_count = len(model_dict)
+
+        if field_count == none_field_count:
+            raise ValueError("At least one identifying field must be provided.")
+
         return self
-    
