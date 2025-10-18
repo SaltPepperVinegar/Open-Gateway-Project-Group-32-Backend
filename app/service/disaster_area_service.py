@@ -1,11 +1,24 @@
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 from fastapi import HTTPException, status
 
-from app.models.api.disaster_area import DisasterAreaCreateReq, DisasterAreaCreateRes
-from app.models.DTO.disaster_area import DisasterAreaCreateDTO
+from app.exceptions.disaster_area import WorkerCreatesDisasterAreaError
+from app.exceptions.general import InvalidObjectIDStringError
+from app.models.api.disaster_area import (
+    DisasterAreaCreateReq,
+    DisasterAreaCreateRes,
+    DisasterAreaSearchQueryParam,
+    DisasterAreaSearchRes,
+    DisasterAreaUpdateReq,
+    DisasterAreaUpdateRes,
+)
+from app.models.DTO.disaster_area import DisasterAreaCreateDTO, DisasterAreaUpdateDTO
 from app.models.embedded.enums import UserRole
-from app.repository.disaster_area_repo import create_disaster_area
+from app.repository.disaster_area_repo import (
+    create_disaster_area,
+    search_disaster_area,
+    update_disaster_area,
+)
 
 
 async def create_disaster_area_service(
@@ -18,10 +31,7 @@ async def create_disaster_area_service(
         )
 
     if decoded_token["role"] != UserRole.MANAGER.value:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only managers can create a new disaster area.",
-        )
+        raise WorkerCreatesDisasterAreaError()
 
     disaster_area_dto = DisasterAreaCreateDTO(
         creator_uid=decoded_token["uid"],
@@ -33,3 +43,24 @@ async def create_disaster_area_service(
     created_disaster_area = await create_disaster_area(disaster_area_dto)
 
     return DisasterAreaCreateRes(**created_disaster_area.model_dump())
+
+
+async def search_disaster_areas_service(
+    query: DisasterAreaSearchQueryParam,
+) -> List[DisasterAreaSearchRes]:
+    results = await search_disaster_area(query.status)
+
+    return [DisasterAreaSearchRes(**result.model_dump()) for result in results]
+
+
+async def update_disaster_area_service(
+    id: str, update_info: DisasterAreaUpdateReq
+) -> DisasterAreaUpdateRes:
+    try:
+        update_dto = DisasterAreaUpdateDTO(id=id, status=update_info.status)
+    except ValueError:
+        raise InvalidObjectIDStringError() from ValueError
+
+    disaster_area_dto = await update_disaster_area(update_dto)
+
+    return DisasterAreaUpdateRes(**disaster_area_dto.model_dump())
