@@ -40,7 +40,7 @@ async def create_disaster_area(
         ) from err
 
 
-@router.get("", response_model=List[DisasterAreaSearchRes], status_code=200)
+@router.get("/", response_model=List[DisasterAreaSearchRes], status_code=200)
 async def search_disaster_areas(
     query: Annotated[
         DisasterAreaSearchQueryParam, Depends(disaster_area_search_query_params)

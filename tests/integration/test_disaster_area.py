@@ -171,3 +171,90 @@ async def test_worker_tries_create_disaster_area(
     resp = await api_post("/api/v1/disaster_areas", payload, new_token)
     assert resp.status_code == 403
     assert "Only managers can create a new disaster area." in resp.text
+
+
+@pytest.mark.parametrize(
+    "firebase_new_user",
+    [{"email": settings.MANAGER_EMAILS[0], "password": "MyStrongPass123"}],
+    indirect=True,
+)
+async def test_disaster_area_search(
+    init_db, clean_db, init_firebase, firebase_log_in
+):
+    payload = {"display_name": "Test Manager"}
+    resp = await api_post("/api/v1/users", payload, firebase_log_in["token"])
+    assert resp.status_code == 201, resp.text
+
+    
+    new_token = firebase_log_in_manually(settings.MANAGER_EMAILS[0], "MyStrongPass123")[
+        "token"
+    ]
+
+    # Create 3 different disaster areas
+
+    area_payload_1 = {
+        "title": "Flooding in Downtown",
+        "description": "Severe flash flooding reported in central business district after heavy rainfall.",
+        "boundary": {
+            "gid": "b6f4a892-19cd-4a32-901e-f45acb4dbe3f",
+            "type": "Polygon",
+            "coordinates": [
+                [[10.1, 20.2], [11.3, 21.4], [12.5, 22.6], [10.1, 20.2]]
+            ],
+        },
+    }
+
+    area_payload_2 = {
+        "title": "Wildfire near National Park",
+        "description": "Rapidly spreading wildfire detected at the park boundary; strong winds observed.",
+        "boundary": {
+            "gid": "3a1b9c45-8a2f-48f8-9324-642c7912a1f9",
+            "type": "Polygon",
+            "coordinates": [
+                [[30.5, 40.7], [31.8, 41.9], [32.0, 42.5], [30.5, 40.7]]
+            ],
+        },
+    }
+
+    area_payload_3 = {
+        "title": "Chemical Spill on Highway",
+        "description": "Tanker truck overturned, releasing hazardous material across both lanes.",
+        "boundary": {
+            "gid": "e02f598a-84ef-4de0-9b4b-97830c9e77f6",
+            "type": "Polygon",
+            "coordinates": [
+                [[50.2, 60.1], [51.3, 61.4], [52.5, 62.7], [50.2, 60.1]]
+            ],
+        },
+    }
+
+    # Call disaster area create API endpoint for them to put them in database
+
+    resp = await api_post("/api/v1/disaster_areas", area_payload_1, new_token)
+    assert resp.status_code == 201, resp.text
+
+    resp = await api_post("/api/v1/disaster_areas", area_payload_2, new_token)
+    assert resp.status_code == 201, resp.text
+
+    resp = await api_post("/api/v1/disaster_areas", area_payload_3, new_token)
+    assert resp.status_code == 201, resp.text
+    
+    # Search with no status specified
+    # Except three areas are found
+
+    pass
+
+    # Search with status = ACTIVE
+    # Also expect three areas are found (new created areas have active status as default)
+
+    pass
+
+    # Search with status = RESOLVED
+    # Expect no areas are found
+
+    pass
+
+    # Search with status = DELETED
+    # Also expect no areas are found
+
+    pass
