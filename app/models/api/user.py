@@ -11,7 +11,16 @@ class UserRegisterReq(BaseModel):
 
 class UserRegisterRes(BaseModel):
     uid: str
-    display_name: str = Field(min_length=1, max_length=100)
+    display_name: str
+    email: EmailStr
+    role: UserRole
+    created_at: datetime
+    updated_at: datetime
+
+
+class UserProfileRes(BaseModel):
+    uid: str
+    display_name: str
     email: EmailStr
     role: UserRole
     created_at: datetime
