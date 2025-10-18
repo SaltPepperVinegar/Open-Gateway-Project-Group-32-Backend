@@ -2,7 +2,6 @@ from datetime import datetime, timezone
 from typing import List, Optional
 
 from bson import ObjectId
-from pymongo import DESCENDING
 
 from app.exceptions.disaster_area import DisasterAreaDoesNotExistError
 from app.models.db.disaster_area import DisasterAreaDocument
@@ -33,7 +32,7 @@ async def search_disaster_area(
         # Results are sorted with latest updated area at the beginning.
         disaster_area_documents = (
             await DisasterAreaDocument.find(DisasterAreaDocument.status == status)
-            .sort([DisasterAreaDocument.updated_at, DESCENDING])
+            .sort("-updated_at")
             .to_list()
         )
     else:
@@ -44,7 +43,7 @@ async def search_disaster_area(
             await DisasterAreaDocument.find(
                 DisasterAreaDocument.status == DisasterAreaStatus.ACTIVE
             )
-            .sort([DisasterAreaDocument.updated_at, DESCENDING])
+            .sort("-updated_at")
             .to_list()
         )
 
@@ -53,7 +52,7 @@ async def search_disaster_area(
             await DisasterAreaDocument.find(
                 DisasterAreaDocument.status == DisasterAreaStatus.RESOLVED
             )
-            .sort([DisasterAreaDocument.updated_at, DESCENDING])
+            .sort("-updated_at")
             .to_list()
         )
 

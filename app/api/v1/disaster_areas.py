@@ -40,18 +40,21 @@ async def create_disaster_area(
         ) from err
 
 
-@router.get("/", response_model=List[DisasterAreaSearchRes], status_code=200)
+@router.get("", response_model=List[DisasterAreaSearchRes], status_code=200)
 async def search_disaster_areas(
     query: Annotated[
         DisasterAreaSearchQueryParam, Depends(disaster_area_search_query_params)
     ],
+    _: Annotated[Dict[str, Any], Depends(get_decoded_token)],
 ) -> List[DisasterAreaSearchRes]:
     return await search_disaster_areas_service(query)
 
 
 @router.patch("/{id}", response_model=DisasterAreaUpdateRes, status_code=200)
 async def update_disaster_area(
-    id: str, update_info: DisasterAreaUpdateReq
+    id: str,
+    update_info: DisasterAreaUpdateReq,
+    _: Annotated[Dict[str, Any], Depends(get_decoded_token)],
 ) -> DisasterAreaUpdateRes:
     try:
         return await update_disaster_area_service(id, update_info)
