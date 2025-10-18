@@ -1,8 +1,8 @@
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 from fastapi import HTTPException, status
 
-from app.models.api.disaster_area import DisasterAreaCreateReq, DisasterAreaCreateRes
+from app.models.api.disaster_area import DisasterAreaCreateReq, DisasterAreaCreateRes, DisasterAreaSearchQueryParam, DisasterAreaSearchRes
 from app.models.DTO.disaster_area import DisasterAreaCreateDTO
 from app.models.embedded.enums import UserRole
 from app.repository.disaster_area_repo import create_disaster_area
@@ -33,3 +33,9 @@ async def create_disaster_area_service(
     created_disaster_area = await create_disaster_area(disaster_area_dto)
 
     return DisasterAreaCreateRes(**created_disaster_area.model_dump())
+
+
+async def search_disaster_areas_service(
+    query: DisasterAreaSearchQueryParam
+) -> List[DisasterAreaSearchRes]:
+    pass
