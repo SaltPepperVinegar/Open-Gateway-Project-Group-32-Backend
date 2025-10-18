@@ -7,6 +7,7 @@ from typing import cast
 import firebase_admin
 from beanie import init_beanie
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from firebase_admin import credentials, get_app
 from motor.motor_asyncio import AsyncIOMotorClient
 
@@ -79,6 +80,14 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title=settings.APP_NAME, lifespan=lifespan)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3001"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Routers
 app.include_router(users_router, prefix="/api/v1")

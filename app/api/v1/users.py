@@ -4,7 +4,12 @@ from fastapi import APIRouter, Depends, HTTPException
 
 from app.api.v1.users_depends import get_decoded_token
 from app.exceptions.user import UserAlreadyRegisteredError, UserDoesNotExistError
-from app.models.api.user import UserProfileRes, UserRegisterReq, UserRegisterRes
+from app.models.api.user import (
+    UserProfileRes,
+    UserRegisterReq,
+    UserRegisterRes,
+    VerifyTokenRes,
+)
 from app.service.user_service import (
     register_user_service,
     retrieve_user_profile_service,
@@ -22,6 +27,13 @@ async def register_user(
         return await register_user_service(req, decoded_token)
     except UserAlreadyRegisteredError as err:
         raise HTTPException(status_code=400, detail=err.message) from err
+
+
+@router.get("/verify-token", response_model=VerifyTokenRes)
+async def verify_token(
+    _: Annotated[Dict[str, Any], Depends(get_decoded_token)],
+) -> VerifyTokenRes:
+    return VerifyTokenRes(is_valid=True)
 
 
 @router.get("/profile", response_model=UserProfileRes, status_code=200)

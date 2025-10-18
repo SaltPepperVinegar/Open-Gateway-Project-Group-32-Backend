@@ -24,6 +24,9 @@ class Settings(BaseSettings):
         "manager_3@email.com",
         "manager_4@email.com",
         "manager_5@email.com",
+        "zijie@test.com",
+        "canghai@test.com",
+        "yikang@test.com",
     ]
 
     # Terms will be loaded from .env or os.environ:
