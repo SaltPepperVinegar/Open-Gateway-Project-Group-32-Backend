@@ -14,6 +14,7 @@ class DisasterAreaCreateReq(BaseModel):
 
 
 class DisasterAreaCreateRes(BaseModel):
+    id: str  # Converted from MongoDB ObjectID
     creator_uid: str
     title: str
     description: str
@@ -39,6 +40,23 @@ class DisasterAreaSearchRes(BaseModel):
     This data model is used for response body of GET endpoint of disaster area.
     """
 
+    id: str  # Converted from MongoDB ObjectID
+    creator_uid: str
+    title: str
+    description: str
+    boundary: GeoJSONPolygon
+    status: DisasterAreaStatus
+    created_at: datetime
+    updated_at: datetime
+    resolved_at: Optional[datetime]
+
+
+class DisasterAreaUpdateReq(BaseModel):
+    status: DisasterAreaStatus
+
+
+class DisasterAreaUpdateRes(BaseModel):
+    id: str  # Converted from MongoDB ObjectID
     creator_uid: str
     title: str
     description: str

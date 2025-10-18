@@ -4,3 +4,11 @@ class DisasterAreaDoesNotExistError(Exception):
     def __init__(self) -> None:
         self.message = "The target disaster area does not exist."
         super().__init__(self.message)
+
+
+class WorkerCreatesDisasterAreaError(Exception):
+    """Raised when a worker tries to create a disaster area."""
+
+    def __init__(self) -> None:
+        self.message = "Only managers can create a new disaster area."
+        super().__init__(self.message)

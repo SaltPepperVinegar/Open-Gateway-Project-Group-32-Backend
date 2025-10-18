@@ -46,6 +46,8 @@ async def test_manager_create_disaster_area(
 
     resp = DisasterAreaCreateRes(**(resp.json()))
 
+    assert isinstance(resp.id, str)
+    assert len(resp.id) > 0
     assert resp.title == payload["title"]
     assert resp.description == payload["description"]
     assert resp.boundary == GeoJSONPolygon(**payload["boundary"])
