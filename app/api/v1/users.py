@@ -4,7 +4,12 @@ from fastapi import APIRouter, Depends, HTTPException
 
 from app.api.v1.users_depends import get_decoded_token
 from app.exceptions.user import UserAlreadyRegisteredError, UserDoesNotExistError
-from app.models.api.user import UserProfileRes, UserRegisterReq, UserRegisterRes, VerifyTokenRes
+from app.models.api.user import (
+    UserProfileRes,
+    UserRegisterReq,
+    UserRegisterRes,
+    VerifyTokenRes,
+)
 from app.service.user_service import (
     register_user_service,
     retrieve_user_profile_service,
