@@ -13,10 +13,12 @@ from motor.motor_asyncio import AsyncIOMotorClient
 
 from app.api.v1.disaster_areas import router as disaster_areas_router
 from app.api.v1.retrieve_population_data import router as population_router
+from app.api.v1.survivor_reports import router as survivor_reports_router
 from app.api.v1.tile_area_update_service_test import router as tiles_router
 from app.api.v1.users import router as users_router
 from app.core.config import settings
 from app.models.db.disaster_area import DisasterAreaDocument
+from app.models.db.survivor_report import SurvivorReportDocument
 from app.models.db.tile import TileDoc
 from app.models.db.tile_area import TilingAreaDoc
 from app.models.db.tiling_job import TilingJobDoc
@@ -30,6 +32,7 @@ DB_DOCUMENT_MODELS = [
     TilingJobDoc,
     TilingAreaDoc,
     DisasterAreaDocument,
+    SurvivorReportDocument,
 ]
 
 
@@ -94,6 +97,7 @@ app.include_router(users_router, prefix="/api/v1")
 app.include_router(tiles_router, prefix="/api/v1")
 app.include_router(disaster_areas_router, prefix="/api/v1")
 app.include_router(population_router, prefix="/api/v1")
+app.include_router(survivor_reports_router, prefix="/api/v1")
 
 
 # Health checks
