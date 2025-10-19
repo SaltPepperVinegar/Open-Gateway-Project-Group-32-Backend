@@ -1,5 +1,5 @@
-from typing import Optional
 from datetime import datetime, timezone
+from typing import Optional
 
 from pydantic import BaseModel, Field
 
@@ -8,6 +8,7 @@ from app.models.embedded.geo_json import GeoJSONPoint
 
 
 class SurvivorReportDTO(BaseModel):
+    id: str  # String representing MongoDB ObjectID
     title: Optional[str]
     description: Optional[str]
     level: Optional[SurvivorReportEmergencyLevel]

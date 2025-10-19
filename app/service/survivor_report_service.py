@@ -1,11 +1,19 @@
 from typing import List
 
-from app.models.api.survivor_report import SurvivorReportCreateReq, SurvivorReportCreateRes, SurvivorReportRetrieveRes
-from app.models.DTO.survivor_report import SurvivorReportDTO, SurvivorReportCreateDTO
-from app.repository.survivor_report_repo import create_survivor_report, get_all_survivor_reports
+from app.models.api.survivor_report import (
+    SurvivorReportCreateReq,
+    SurvivorReportCreateRes,
+    SurvivorReportRetrieveRes,
+)
+from app.models.DTO.survivor_report import SurvivorReportCreateDTO
+from app.repository.survivor_report_repo import (
+    create_survivor_report,
+    get_all_survivor_reports,
+)
+
 
 async def create_survivor_report_service(
-    create_req: SurvivorReportCreateReq
+    create_req: SurvivorReportCreateReq,
 ) -> SurvivorReportCreateRes:
     report_create_dto = SurvivorReportCreateDTO(**create_req.model_dump())
     created_report_dto = await create_survivor_report(report_create_dto)
@@ -16,9 +24,8 @@ async def create_survivor_report_service(
 async def retrieve_all_survivor_report_service() -> List[SurvivorReportRetrieveRes]:
     reports_dto = await get_all_survivor_reports()
     response_list = [
-        SurvivorReportRetrieveRes(
-            **report_dto.model_dump()
-        ) for report_dto in reports_dto
+        SurvivorReportRetrieveRes(**report_dto.model_dump())
+        for report_dto in reports_dto
     ]
 
     return response_list

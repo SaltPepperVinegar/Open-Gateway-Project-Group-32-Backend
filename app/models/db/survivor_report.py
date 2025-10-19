@@ -3,8 +3,8 @@ from typing import Optional
 
 from beanie import Document
 
-from app.models.embedded.geo_json import GeoJSONPoint
 from app.models.embedded.enums import SurvivorReportEmergencyLevel
+from app.models.embedded.geo_json import GeoJSONPoint
 
 
 class SurvivorReportDocument(Document):

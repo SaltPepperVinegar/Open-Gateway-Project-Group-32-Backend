@@ -1,5 +1,5 @@
-from typing import Optional
 from datetime import datetime
+from typing import Optional
 
 from pydantic import BaseModel
 
@@ -16,6 +16,7 @@ class SurvivorReportCreateReq(BaseModel):
 
 
 class SurvivorReportCreateRes(BaseModel):
+    id: str  # String representing MongoDB ObjectID
     title: Optional[str]
     description: Optional[str]
     level: Optional[SurvivorReportEmergencyLevel]
@@ -25,6 +26,7 @@ class SurvivorReportCreateRes(BaseModel):
 
 
 class SurvivorReportRetrieveRes(BaseModel):
+    id: str  # String representing MongoDB ObjectID
     title: Optional[str]
     description: Optional[str]
     level: Optional[SurvivorReportEmergencyLevel]
