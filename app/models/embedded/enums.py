@@ -28,3 +28,9 @@ class DisasterAreaStatus(str, Enum):
     ACTIVE = "active"
     RESOLVED = "resolved"
     DELETED = "deleted"
+
+
+class SurvivorReportEmergencyLevel(str, Enum):
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
