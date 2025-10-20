@@ -3,6 +3,7 @@ from typing import Any, Dict, List
 from beanie import PydanticObjectId
 from fastapi import HTTPException, status
 
+from app.core.config import settings
 from app.exceptions.disaster_area import WorkerCreatesDisasterAreaError
 from app.exceptions.general import InvalidObjectIDStringError
 from app.models.api.disaster_area import (
@@ -58,6 +59,7 @@ async def create_disaster_area_service(
                 coordinates=created_disaster_area.boundary.coordinates,
             ),
             area_id=PydanticObjectId(created_disaster_area.id),
+            spacing_m=settings.SPACING_M,
         )
     )
 
