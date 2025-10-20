@@ -10,7 +10,7 @@ class TileAreaUpdateDTO(BaseModel):
     area: GeoJSONPolygon
     area_id: Annotated[PydanticObjectId, Indexed()]
     spacing_m: int = 200
-    update_interval_seconds: int = 300
+    update_interval_seconds: int = 3600
 
 
 class TileAreaRemoveDTO(BaseModel):
