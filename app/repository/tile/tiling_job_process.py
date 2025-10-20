@@ -2,6 +2,7 @@ import asyncio
 import random
 from datetime import datetime, timezone
 
+import numpy as np
 from fastapi import HTTPException
 
 from app.exceptions.tile_batch_exceptions import TileBatchError
@@ -117,4 +118,20 @@ async def process_tile_batch(job: TilingJobDoc, batch_size=100, concurrency=10):
 
 
 async def get_population_density(area: GeoJSONPolygon):
-    return random.randint(100, 200)
+    """
+    Simulate population density (people/km²) for a given GeoJSON polygon.
+    Distribution: log-normal, mean ≈ 300, long tail up to ~20,000.
+    """
+    # base log-normal parameters
+    mu = np.log(300)  # mean in log-space
+    sigma = 1.0  # controls variance; higher = more spread
+
+    # sample one value
+    density = np.random.lognormal(mu, sigma)
+
+    # add small regional randomness
+    density *= random.uniform(0.8, 1.2)
+
+    # clamp to reasonable bounds (avoid unrealistic extremes)
+    density = min(max(density, 20), 200)
+    return density
