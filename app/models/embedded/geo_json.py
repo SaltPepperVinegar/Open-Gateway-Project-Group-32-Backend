@@ -72,3 +72,5 @@ class GeoJSONPoint(BaseModel):
     def validate_coordinates(cls, coords):
         if len(coords) != 2:
             raise ValueError("A point must be a [lng, lat] coordinate pair")
+
+        return coords
