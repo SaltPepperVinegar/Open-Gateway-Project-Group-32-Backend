@@ -22,6 +22,7 @@ async def build_tiles_and_store(area: TilingAreaDoc, job: TilingJobDoc) -> int:
     tiles = tile_strategy_square_centre(rings, spacing_m=area.spacing_m)
 
     bulk: List[TileDoc] = []
+
     for b in tiles:
         cx = sum(p[0] for p in b[:4]) / 4.0
         cy = sum(p[1] for p in b[:4]) / 4.0
@@ -36,6 +37,7 @@ async def build_tiles_and_store(area: TilingAreaDoc, job: TilingJobDoc) -> int:
         )
         bulk.append(doc)
 
-    await TileDoc.insert_many(bulk)
+    if bulk:
+        await TileDoc.insert_many(bulk)
 
     return len(bulk)
