@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     APP_NAME_TEST: str = "Disaster Rescue API (Test)"
     DB_NAME: str = "opgw"
     DB_NAME_TEST: str = "opgw_test"
-
+    SPACING_M: int = 20
     MANAGER_EMAILS: List[str] = [
         "manager_1@email.com",
         "manager_2@email.com",
