@@ -100,4 +100,9 @@ def firebase_log_in(firebase_new_user, init_firebase):
 
     data = r.json()
 
-    yield {"uid": data["localId"], "token": data["idToken"]}
+    yield {
+        "uid": data["localId"],
+        "token": data["idToken"],
+        "email": firebase_new_user["email"],
+        "password": firebase_new_user["password"],
+    }
