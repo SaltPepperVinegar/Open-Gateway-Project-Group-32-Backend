@@ -5,6 +5,7 @@ from app.models.api.survivor_report import (
     SurvivorReportCreateRes,
     SurvivorReportRetrieveRes,
 )
+from app.models.db.survivor_report import SurvivorReportDocument
 from app.models.DTO.survivor_report import SurvivorReportCreateDTO
 from app.repository.survivor_report_repo import (
     create_survivor_report,
@@ -29,3 +30,16 @@ async def retrieve_all_survivor_report_service() -> List[SurvivorReportRetrieveR
     ]
 
     return response_list
+
+
+async def resolve_survivor_report_service(
+    id: str,
+) -> bool:
+
+    report = await SurvivorReportDocument.get_by_id(id)
+
+    if report:
+        await report.delete()
+        return True
+    else:
+        return False

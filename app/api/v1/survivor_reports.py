@@ -10,6 +10,7 @@ from app.models.api.survivor_report import (
 )
 from app.service.survivor_report_service import (
     create_survivor_report_service,
+    resolve_survivor_report_service,
     retrieve_all_survivor_report_service,
 )
 
@@ -28,3 +29,11 @@ async def retrieve_all_survivor_reports(
     _: Annotated[Dict[str, Any], Depends(get_decoded_token)],
 ) -> List[SurvivorReportRetrieveRes]:
     return await retrieve_all_survivor_report_service()
+
+
+@router.delete("/{id}", response_model=bool, status_code=200)
+async def resolve_survivor_reports(
+    id: str,
+    _: Annotated[Dict[str, Any], Depends(get_decoded_token)],
+):
+    return await resolve_survivor_report_service(id)
