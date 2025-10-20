@@ -36,4 +36,4 @@ async def resolve_survivor_reports(
     id: str,
     _: Annotated[Dict[str, Any], Depends(get_decoded_token)],
 ):
-    return await resolve_survivor_report_service()
+    return await resolve_survivor_report_service(id)

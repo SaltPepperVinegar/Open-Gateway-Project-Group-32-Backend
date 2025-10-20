@@ -36,7 +36,7 @@ async def resolve_survivor_report_service(
     id: str,
 ) -> bool:
 
-    report = await SurvivorReportDocument.get_by_id(str)
+    report = await SurvivorReportDocument.get_by_id(id)
 
     if report:
         await report.delete()
