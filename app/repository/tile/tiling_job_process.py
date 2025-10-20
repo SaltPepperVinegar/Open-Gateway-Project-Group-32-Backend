@@ -134,4 +134,4 @@ async def get_population_density(area: GeoJSONPolygon):
 
     # clamp to reasonable bounds (avoid unrealistic extremes)
     density = min(max(density, 20), 200)
-    return density
+    return int(density)
