@@ -198,7 +198,7 @@ Deployment Method: Google Cloud Build (GitHub hook) → Cloud Run
 
 - **Firebase Auth** enabled
 
-- **IAM authentication** enabled 
+- **IAM authentication** enabled  
 
 - .env secrets managed via **Cloud Run environment variables**
 
