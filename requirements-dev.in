@@ -22,4 +22,4 @@ passlib[bcrypt]
 bcrypt==3.2.2
 
 firebase_admin
-
+matplotlib

@@ -17,8 +17,17 @@ class Settings(BaseSettings):
     APP_NAME_TEST: str = "Disaster Rescue API (Test)"
     DB_NAME: str = "opgw"
     DB_NAME_TEST: str = "opgw_test"
-
-    MANAGER_EMAILS: List[str] = ["manager_1@email.com", "manager_2@email.com"]
+    SPACING_M: int = 200
+    MANAGER_EMAILS: List[str] = [
+        "manager_1@email.com",
+        "manager_2@email.com",
+        "manager_3@email.com",
+        "manager_4@email.com",
+        "manager_5@email.com",
+        "zijie@test.com",
+        "canghai@test.com",
+        "yikang@test.com",
+    ]
 
     # Terms will be loaded from .env or os.environ:
     MONGO_DSN: Optional[str] = None
