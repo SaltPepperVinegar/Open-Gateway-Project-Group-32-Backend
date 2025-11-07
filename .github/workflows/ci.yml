@@ -20,14 +20,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python 3.13
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.13"
-
-      - name: Install pip-tools (pinned)
+      - name: Set up pip-tools in isolated venv
         run: |
+          python -m venv .venv
+          . .venv/bin/activate
           python -m pip install -U pip setuptools wheel "pip-tools>=7.5.0,<8.0.0"
+
       - name: Recompile and verify requirements are up to date
         env:
           CUSTOM_COMPILE_COMMAND: "pip-compile (CI standardized)"
