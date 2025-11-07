@@ -32,12 +32,14 @@ jobs:
         env:
           CUSTOM_COMPILE_COMMAND: "pip-compile (CI standardized)"
         run: |
-          pip-compile --no-header --no-annotate --strip-extras \
+          python -m piptools compile --no-header --no-annotate --strip-extras \
             -o requirements.txt requirements.in
+
           if [ -f requirements-dev.in ]; then
-            pip-compile --no-header --no-annotate --strip-extras \
+            python -m piptools compile --no-header --no-annotate --strip-extras \
               -o requirements-dev.txt requirements-dev.in
           fi
+
           git diff --exit-code -- requirements*.txt
 
       - name: Cache pip
