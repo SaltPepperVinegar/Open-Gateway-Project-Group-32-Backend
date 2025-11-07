@@ -22,29 +22,42 @@ pre-commit install
 
 cp .env.example .env
 ```
+### Prepare .env
 
-### Firebase Auth Setup for Development
+To run this project, you need to configure environment variables and prerequisites as follows.
 
-#### 1. Generate Service Account Key
-- Go to [Firebase Console](https://console.firebase.google.com/)  
-- Select project **ogwp** → **Project settings** → **Service accounts**  
-- Click **Generate new private key**  
-- Download the `.json` file (keep it private, do not commit)
+1. **Copy the example file**  
+   Duplicate `env.example` in the project root and name the copy `.env`.
 
-#### 2. Store the Key
-- Move the file into:  
-  `Open-Gateway-Project-Group-32/secrets/your-firebase-private-key.json`
+2. **Fill in the required fields**  
+   Open `.env` and replace the placeholders with your actual values:
 
-#### 3. Configure `.env`
-Add the following new line to .env
-`FIREBASE_CRED_PATH=secrets/your-firebase-private-key.json`
+    MONGO_DSN=your-mongo-db-dsn  
+    FIREBASE_CRED=base-64-encoded-private-key-json-file  
+    FIREBASE_FRONTEND_CRED=base-64-encoded-frontend-credential-json  
 
-#### 4. Access in code
-```
-from app.core.config import settings
-print(settings.FIREBASE_CRED_PATH)
-# -> secrets/your-firebase-private-key.json
-```
+#### Step 1: Prepare MongoDB
+
+You must have a MongoDB instance (local or remote). Inside that MongoDB, ensure **two databases** exist:
+
+- `opgw`
+- `opgw_test`
+
+You **do not** need to manually create any collections/documents. The backend will create them automatically at runtime.
+
+#### Step 2: Set Up Firebase
+
+1. Create or select a **Firebase project** and enable **Firebase Authentication**.
+2. Obtain both credential JSON files:
+   - **Admin private key JSON** (for server-side Firebase Admin SDK).
+   - **Frontend credential JSON** (for client-side Firebase SDK).
+3. Convert each JSON file to **Base64-encoded strings** and place them in `.env`:
+4. Paste the Base64 strings into the corresponding `.env` fields:
+
+    FIREBASE_CRED=...base64-string...  
+    FIREBASE_FRONTEND_CRED=...base64-string...  
+
+After completing the above, your environment is ready to proceed with the subsequent setup and run steps.
 
 ### How to run the server locally 
 
@@ -96,7 +109,7 @@ mypy app
 
 - A configured MongoDB Atlas Cluster (or self-hosted MongoDB)
 
-- Firebase project service account key (.json) placed under secrets/
+- Firebase project credentials as json files
 
 
 ## Service Information
@@ -120,6 +133,11 @@ Deployment Method: Google Cloud Build (GitHub hook) → Cloud Run
 ### Service URL: https://open-gateway-project-group-32-backend-758384409722.australia-southeast2.run.app
 
 ## Deployment Steps Taken
+
+### 0. Prepare .env
+
+Preparation steps are all the same as those in **Set Up** section above.  
+Make sure .env is configured correctly, otherwise the backend program cannot access MongoDB and Firebase Authentication.
 
 ### 1. Built and Tested Locally
 
@@ -154,7 +172,7 @@ Deployment Method: Google Cloud Build (GitHub hook) → Cloud Run
 - MONGO_DSN: Atlas connection string
 
 - FIREBASE_CRED: 
-  - Firebase Admin SDK service account (JSON, base64-encoded in secrets).
+  - Firebase Admin SDK service account (JSON, base64-encoded).
 
   - Used for backend authentication & verification of user tokens. 
 
