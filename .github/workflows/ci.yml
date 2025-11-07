@@ -27,9 +27,13 @@ jobs:
 
       - name: Install latest pip + pip-tools (force)
         run: |
+          # make sure pip itself is new enough
           python -m pip install --upgrade --no-cache-dir "pip==25.1.1" setuptools wheel
+          # get rid of whatever the image shipped with
           python -m pip uninstall -y pip-tools || true
+          # install the version that explicitly supports pip >= 25.1
           python -m pip install --upgrade --force-reinstall --no-cache-dir "pip-tools==7.5.1"
+      - name: Recompile and verify requirements are up to date
         env:
           CUSTOM_COMPILE_COMMAND: "pip-compile (CI standardized)"
         run: |
